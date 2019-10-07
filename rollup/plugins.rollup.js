@@ -5,7 +5,6 @@ import resolve from 'rollup-plugin-node-resolve';
 import json from 'rollup-plugin-json';
 import replace from 'rollup-plugin-replace';
 import { terser } from "rollup-plugin-terser";
-import builtins from 'rollup-plugin-node-builtins';
 import visualizer from 'rollup-plugin-visualizer';
 import pkg from '../package.json'
 
@@ -16,7 +15,6 @@ export default [
     module: true,
     jsnext: true,
   }),
-  builtins(),
   json(),
   terser(),
   // visualizer({
