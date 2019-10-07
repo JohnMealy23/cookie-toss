@@ -3,13 +3,13 @@ import { getBaseDomain } from '../../utils/getBaseDomain';
 import { ApiEndpoint } from '../../types';
 
 export interface TestData {
-    mcid: string
+    example: string
 }
 
-const getMcid = (): TestData => {
-    // Add MCID getter/cookier here
+const getData = (): TestData => {
+    // Replace this code with getter/cookier
     return {
-        mcid: 'tempMcid'
+        example: 'test-data'
     };
 };
 
@@ -20,7 +20,7 @@ export const endpoint: ApiEndpoint = async (origin) => {
         return;
     }
     
-    const testData = getMcid();
+    const testData = getData();
     
     const response = {
         path: paths.response,
