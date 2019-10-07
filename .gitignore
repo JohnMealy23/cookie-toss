@@ -1,0 +1,9 @@
+dist
+lib
+node_modules
+.vscode
+.env
+.DS_Store
+.rpt2_cache
+*.map
+coverage/

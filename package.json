@@ -1,0 +1,46 @@
+{
+  "name": "cookie-swap",
+  "version": "1.0.0",
+  "description": "",
+  "main": "dist/index.js",
+  "htmlScript": "dist/cookie-swap.js",
+  "testFile": "dist/index-smoketests.js",
+  "scripts": {
+    "build-deploy": "sh scripts/build-deploy.sh",
+    "test": "jest",
+    "start": "node ./index.js"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "url-parse": "^1.4.7"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.6.2",
+    "@types/jest": "^23.3.2",
+    "@types/js-cookie": "^2.1.0",
+    "@types/node": "^9.3.0",
+    "jest": "^23.6.0",
+    "jest-date-mock": "^1.0.7",
+    "jest-fetch-mock": "^2.1.2",
+    "rollup": "^0.66.2",
+    "rollup-plugin-babel": "^4.3.2",
+    "rollup-plugin-commonjs": "^9.2.0",
+    "rollup-plugin-json": "^3.1.0",
+    "rollup-plugin-node-builtins": "^2.1.2",
+    "rollup-plugin-node-resolve": "^3.4.0",
+    "rollup-plugin-replace": "^2.1.0",
+    "rollup-plugin-sourcemaps": "^0.4.2",
+    "rollup-plugin-terser": "^3.0.0",
+    "rollup-plugin-typescript2": "^0.22.1",
+    "rollup-plugin-visualizer": "^2.5.4",
+    "ts-jest": "^23.1.4",
+    "ts-node": "^7.0.1",
+    "tslint": "^5.11.0",
+    "tslint-config-airbnb": "^5.11.0",
+    "tslint-config-prettier": "^1.15.0",
+    "tslint-config-standard": "^8.0.1",
+    "typescript": "^3.5.0"
+  }
+}
