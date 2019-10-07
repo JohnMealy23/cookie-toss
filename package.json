@@ -21,7 +21,7 @@
     "@types/jest": "^23.3.2",
     "@types/js-cookie": "^2.1.0",
     "@types/node": "^9.3.0",
-    "jest": "^23.6.0",
+    "jest": "^25.0.0",
     "jest-date-mock": "^1.0.7",
     "jest-fetch-mock": "^2.1.2",
     "rollup": "^0.66.2",
