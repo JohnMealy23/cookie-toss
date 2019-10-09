@@ -16,12 +16,14 @@ const getData = (): TestData => {
 export const endpoint: ApiEndpoint = async (origin) => {
     const baseDomain = getBaseDomain(origin) as WhitelistedSites;
     if (!whitelist.includes(baseDomain)) {
-        console.error(`${origin} isn't included in the whitelist. Please add it to gain access.`);
-        return;
+        return {
+            path: paths.response,
+            error: `${origin} isn't included in the whitelist. Please add it to gain access.`,
+        }
     }
-    
+
     const testData = getData();
-    
+
     const response = {
         path: paths.response,
         data: testData,

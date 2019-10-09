@@ -1,3 +1,4 @@
 export {
-    appAdapter as appAdapterTest
-} from './test';
+    appAdapter as appAdapterExample,
+    whitelist as whitelistExample,
+} from './example';

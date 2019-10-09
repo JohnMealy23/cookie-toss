@@ -6,11 +6,12 @@ export interface Request {
 }
 export interface Response {
     path: string;
-    data: {
+    data?: {
         [prop: string]: any;
-    }
+    };
+    error?: string;
 }
-export type ApiEndpoint = (origin, data?) => Promise<Response>;
+export type ApiEndpoint = (origin: string, data?: any) => Promise<Response>;
 export interface Api {
     [endpoint: string]: ApiEndpoint;
 }

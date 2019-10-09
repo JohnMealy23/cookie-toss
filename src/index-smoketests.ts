@@ -1,18 +1,22 @@
-// This file runs each iframe injection, outputting the result to the DOM for smoke testing 
-import { appAdapterTest } from "./modules";
+// This file runs each iframe injection, outputting the result to the DOM for smoke testing
+import { appAdapterExample } from "./modules";
 
 const testModules = {
-    appAdapterTest
+    appAdapterExample
 };
 
-export const appAdapterExecutor = async ([name, appAdapter]) => {
+type AppAdapter = () => Promise<any>
+type AppAdapterSpecs = [string, AppAdapter]
+type AppAdapterExecutor = (appAdapterSpecs: AppAdapterSpecs) => Promise<void>
+
+export const appAdapterExecutor: AppAdapterExecutor = async ([name, appAdapter]) => {
     const data = await appAdapter();
     const elem = document.createElement('div');
     elem.id = name;
 
     const h2 = document.createElement('h2');
     h2.innerText = name;
-    
+
     const p = document.createElement('p');
     p.innerText = JSON.stringify(data, null, 4);
 

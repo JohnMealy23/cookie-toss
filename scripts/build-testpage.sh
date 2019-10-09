@@ -3,7 +3,7 @@
 source scripts/loggin.sh
 
 export PKG=$(cat ./package.json)
-\
+
 export MODULE_NAME="Iframe Test Page"
 
 node_modules/.bin/rollup -c rollup/test-module.rollup.js
@@ -19,3 +19,5 @@ envsubst '\$INSERTED_SCRIPT $MODULE_NAME' < src/iframe/shell.html > dist/iframe-
 
 loggin "Remove iframe script after it's consumption"
 rm $TEST_PAGE_JS_FILENAME
+
+# ts-node './test-iframe'
