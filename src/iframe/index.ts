@@ -1,9 +1,9 @@
-// This is the top-level file to be housed in the main site's iframe.  
+// This is the top-level file to be housed in the main site's iframe.
 // It waits to be injected into its parent page, and then called upon to relay the main site's cookies outward.
-import { 
-    paths as pathsTest, 
+import {
+    paths as pathsTest,
     endpoint as endpointTest,
-} from '../modules/test';
+} from '../modules/example';
 
 import { setReceiver } from './setReceiver';
 import { Api } from '../types';

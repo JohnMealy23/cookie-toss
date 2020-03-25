@@ -5,9 +5,15 @@ import { TestData } from './iframe';
 import { getBaseDomain } from "../../utils/getBaseDomain";
 
 type GetTestData = () => Promise<TestData>
+
+interface ReceiveMessageSpecs {
+    origin: string;
+    data: string;
+};
+type ReceiveMessage = (specs: ReceiveMessageSpecs) => void;
 export const appAdapter: GetTestData = () => new Promise((resolve) => {
     // Create and attach listener, to relay iframe response to caller
-    const receiveMessage = ({ origin, data }) => {
+    const receiveMessage: ReceiveMessage = ({ origin, data }) => {
         try {
             const responseData = JSON.parse(data);
             const originBaseDomain = getBaseDomain(origin);
@@ -35,12 +41,12 @@ export const appAdapter: GetTestData = () => new Promise((resolve) => {
     };
 
     // Create iframe
-    const iframe = document.createElement('iframe');
+    const iframe = document.createElement('iframe')
     iframe.src = iframeUrl;
     iframe.style.display = 'none';
-    
+
     // Send the iframe the request upon load into the DOM:
-    iframe.onload = () => iframe.contentWindow.postMessage(JSON.stringify(dataRequest), iframeUrl);
+    iframe.onload = () => iframe && iframe.contentWindow && iframe.contentWindow.postMessage(JSON.stringify(dataRequest), iframeUrl);
 
     // Inject the iframe:
     window.document.body.appendChild(iframe);
