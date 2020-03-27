@@ -1,6 +1,7 @@
 import { getRequestKey } from "../utils";
 import { getAppListener } from "./getAppListener";
 import { sendRequest } from "./sendRequest";
+import { AppConfig } from "../types";
 
 /**
  * In this file we set up the listener for the application,
@@ -14,10 +15,10 @@ import { sendRequest } from "./sendRequest";
  * application.
  */
 
-export const gimmeThatCookieGoodness = <Data>(
-    cookieName: string,
-    iframeUrl: string,
-): Promise<Data> => new Promise((resolve, reject) => {
+export const gimmeThatCookieGoodness = <Data>({
+    cookieName,
+    iframeUrl,
+}: AppConfig): Promise<Data> => new Promise((resolve, reject) => {
 
     // Create and attach listener, to await iframe responses, and
     // relay them back to the host app.
