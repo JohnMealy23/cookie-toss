@@ -1,9 +1,5 @@
 // This file runs each iframe injection, outputting the result to the DOM for smoke testing
-import { appAdapterExample } from "./modules";
-
-const testModules = {
-    appAdapterExample
-};
+import { adapters } from ".";
 
 type AppAdapter = () => Promise<any>
 type AppAdapterSpecs = [string, AppAdapter]
@@ -25,4 +21,4 @@ export const appAdapterExecutor: AppAdapterExecutor = async ([name, appAdapter])
     window.document.body.appendChild(elem);
 }
 
-Object.entries((testModules)).forEach(appAdapterExecutor)
+Object.entries((adapters)).forEach(appAdapterExecutor)
