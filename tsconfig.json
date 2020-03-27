@@ -33,8 +33,6 @@
     "jest",
     "src/setupTests.ts",
     "coverage",
-    "example",
-    "app",
     "lib",
     "config.rollup.js"
   ]
