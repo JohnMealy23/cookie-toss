@@ -3,7 +3,7 @@
     "resolveJsonModule": true,
     "outDir": "lib",
     "allowSyntheticDefaultImports": true,
-    "module": "esnext",
+    // "module": "esnext",
     "target": "es5",
     "lib": [
       "es2015",
@@ -34,7 +34,7 @@
     "src/setupTests.ts",
     "coverage",
     "example",
-    "config",
+    "app",
     "lib",
     "config.rollup.js"
   ]
