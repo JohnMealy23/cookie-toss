@@ -15,14 +15,23 @@ export const iframeEndpointFactory = (
 
     // Create the logic that sits at a particular endpoint within
     // the iframe:
-    const endpoint: IframeRouteEndpoint = async (requestDataPayload) => {
+    const endpoint: IframeRouteEndpoint = async (
+        requestDataPayload, resetCookie
+    ) => {
 
         const key = getResponseKey(cookieName)
         let response: IframeResponse
 
         try {
-            // Attempt to get cached data:
-            let dataStr = cookie.get(cookieName)
+            let dataStr
+
+            if (resetCookie) {
+                // Remove cookie if dictated by app request:
+                cookie.remove(cookieName)
+            } else {
+                // Attempt to get cached data:
+                dataStr = cookie.get(cookieName)
+            }
 
             if (!dataStr) {
                 // If no cached dataStr, retrieve it from the

@@ -16,18 +16,18 @@ export const setIframeListener = (
         const requesterBaseDomain = getBaseDomain(origin);
 
         // If this request came from one of our own, process it:
-        if (requesterBaseDomain in dependentDomains) {
+        if (dependentDomains.includes(requesterBaseDomain)) {
 
             try {
                 // Retrieve the key and data from the request:
-                const { key, data } = JSON.parse(appRequestPayload) as AppRequest;
+                const { key, data, resetCookie } = JSON.parse(appRequestPayload) as AppRequest;
 
                 // Use the key to determine which cookie endpoint the requester is
                 // intending to call:
                 const endpoint = routes[key]
 
                 // Retrieve the cookie value:
-                const response: IframeResponse = await endpoint(data);
+                const response: IframeResponse = await endpoint(data, resetCookie);
 
                 // Emit the result back to the host application:
                 window.parent.postMessage(JSON.stringify(response), origin);

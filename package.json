@@ -3,15 +3,12 @@
   "version": "1.0.0",
   "description": "",
   "main": "dist/index.js",
-  "iframeShellSrc": "src/iframe/shell.html",
-  "testHtml": "dist/iframe-test-page.html",
-  "htmlScript": "dist/cookie-swap.js",
-  "testFile": "dist/index-smoketests.js",
-  "testPort": 3099,
   "scripts": {
-    "build-deploy": "sh scripts/build-deploy.sh",
-    "test": "jest",
-    "start": "node ./index.js"
+    "dev-iframe": "parcel ./examples/iframe.html --port 1111",
+    "dev-app": "parcel ./examples/app.html --port 2222",
+    "dev": "npm run dev-iframe && npm run dev-app",
+    "build-deploy": "parcel build ./src/index.ts",
+    "test": "jest"
   },
   "author": "",
   "license": "ISC",
@@ -33,6 +30,7 @@
     "jest-date-mock": "^1.0.7",
     "jest-fetch-mock": "^2.1.2",
     "opn": "^6.0.0",
+    "parcel": "^1.12.4",
     "rollup": "^0.66.2",
     "rollup-plugin-babel": "^4.3.2",
     "rollup-plugin-commonjs": "^9.2.0",

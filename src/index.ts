@@ -13,5 +13,5 @@ export {
     CookieConfig,
     AppConfig,
     IframeConfig,
-    SafeRequestData
+    StringifiableRequestData
 } from './types'

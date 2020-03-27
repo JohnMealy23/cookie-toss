@@ -18,6 +18,8 @@ import { AppConfig } from "../types";
 export const gimmeThatCookieGoodness = <Data>({
     cookieName,
     iframeUrl,
+    data,
+    resetCookie
 }: AppConfig): Promise<Data> => new Promise((resolve, reject) => {
 
     // Create and attach listener, to await iframe responses, and
@@ -28,6 +30,8 @@ export const gimmeThatCookieGoodness = <Data>({
     // Create the request for data, and send it into the iframe:
     const request = {
         key: getRequestKey(cookieName),
+        data,
+        resetCookie
     };
     sendRequest(iframeUrl, request)
 });

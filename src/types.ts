@@ -2,12 +2,13 @@
  * Types to ensure only stringify-able data is passed:
  */
 export type Primitive = Boolean | Number | String | void
-export type PrimitiveArray = PrimitiveObject[] | Primitive[] | PrimitiveArray[]
+export type PrimitiveArray = PrimitiveObject[] | PrimitiveArray[] | Primitive[]
 export type PrimitiveObject = { [k: string]: Primitive | PrimitiveObject | PrimitiveArray }
-export type SafeRequestData = PrimitiveObject | PrimitiveArray | Primitive | undefined
+export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive | undefined
 export type AppRequest = {
     key: string;
-    data?: SafeRequestData
+    data?: StringifiableRequestData
+    resetCookie?: boolean
 }
 
 /**
@@ -37,7 +38,10 @@ export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
  * accepts requrests, processes them, cookies the retrieved value, and
  * relays the response outward, back to the dependent app.
  */
-export type IframeRouteEndpoint = (data: SafeRequestData) => Promise<IframeResponse>;
+export type IframeRouteEndpoint = (
+    data: StringifiableRequestData,
+    resetCookie?: boolean
+) => Promise<IframeResponse>;
 
 export interface IframeRoutes {
     [endpoint: string]: IframeRouteEndpoint;
@@ -65,7 +69,7 @@ export type CookieConfig = {
      * A function that resides in the iframe, and retrieves the data that
      * will be stored in the cookie on the hub domain:
      */
-    dataGetter: (requestData?: SafeRequestData) => Promise<string>;
+    dataGetter: (requestData?: StringifiableRequestData) => Promise<string>;
 
     /**
      * Optional cookie expiration settings:
@@ -87,6 +91,20 @@ export type AppConfig = {
      */
     cookieName: string;
 
+    /**
+     * Optional data payload to send to iframe listener.  Note that once
+     * the cookie has been set on the hub domain, this data will not come
+     * into play.
+     *
+     * Use the `resetCookie` option to purge the cookie data, if you'd like
+     * to bring the `data` back into play.
+     */
+    data?: StringifiableRequestData;
+
+    /**
+     * Optional.  Purges the cookie on the hub domain when true.
+     */
+    resetCookie?: boolean
 }
 
 export type IframeConfig = {
