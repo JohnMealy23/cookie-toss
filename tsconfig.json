@@ -3,7 +3,6 @@
     "resolveJsonModule": true,
     "outDir": "lib",
     "allowSyntheticDefaultImports": true,
-    // "module": "esnext",
     "target": "es5",
     "lib": [
       "es2015",
@@ -22,8 +21,10 @@
     "noImplicitAny": true,
     "strictNullChecks": true,
     "suppressImplicitAnyIndexErrors": true,
-    "noUnusedLocals": true
+    "noUnusedLocals": true,
+    "baseUrl": "./src"
   },
+  "include": ["src/**/*"],
   "exclude": [
     "node_modules",
     "build",

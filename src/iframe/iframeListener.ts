@@ -1,4 +1,4 @@
-import { IframeRoutes, IframeListener, DependentDomains, AppRequest, IframeResponse } from '../types';
+import { IframeRoutes, IframeListener, DependentDomains, AppRequest, IframeResponse, RequestTypes } from '../types';
 import { getBaseDomain } from '../utils';
 
 /**
@@ -16,18 +16,29 @@ export const setIframeListener = (
         const requesterBaseDomain = getBaseDomain(origin);
 
         // If this request came from one of our own, process it:
-        if (requesterBaseDomain in dependentDomains) {
+        if (dependentDomains.includes(requesterBaseDomain)) {
 
             try {
                 // Retrieve the key and data from the request:
-                const { key, data } = JSON.parse(appRequestPayload) as AppRequest;
+                const { key, type, config } = JSON.parse(appRequestPayload) as AppRequest;
 
-                // Use the key to determine which cookie endpoint the requester is
-                // intending to call:
-                const endpoint = routes[key]
+                let response: IframeResponse
 
-                // Retrieve the cookie value:
-                const response: IframeResponse = await endpoint(data);
+                if (type === RequestTypes['REQUEST_TYPE_SET']) {
+
+                    // The app has requested to set a cookie value:
+                    const endpoint = routes[key] || routes[RequestTypes['REQUEST_TYPE_SET']]
+                    response = await endpoint(config)
+
+                } else {
+
+                    // The app has requested to get a cookie value.
+                    // Check if there is a custom data getter for
+                    // this cookie, or use the generic getter, if not.
+                    const endpoint = routes[key] || routes[RequestTypes['REQUEST_TYPE_GET']]
+                    response = await endpoint(config);
+
+                }
 
                 // Emit the result back to the host application:
                 window.parent.postMessage(JSON.stringify(response), origin);
