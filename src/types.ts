@@ -60,7 +60,7 @@ export type CookieConfig = {
      * A function that resides in the iframe, and retrieves the data that
      * will be stored in the cookie on the hub domain:
      */
-    dataGetter: (requestData?: StringifiableRequestData) => Promise<string>;
+    handler: (requestData?: StringifiableRequestData) => Promise<string>;
 
     /**
      * Optional cookie expiration settings:
@@ -84,7 +84,7 @@ export type AppConfigBase = {
 
 }
 
-export type AppConfigGetterOptions = AppConfigBase & {
+export type AppConfigGetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
      * Optional.  Purges the cookie on the hub domain when true.
@@ -99,16 +99,16 @@ export type AppConfigGetterOptions = AppConfigBase & {
      * Use the `resetCookie` option to purge the cookie data, if you'd like
      * to bring the `data` back into play.
      */
-    data?: StringifiableRequestData;
+    data?: AppData;
 
 }
 
-export type AppConfigSetterOptions = AppConfigBase & {
+export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
      * Data to be cookied on iframe domain.
      */
-    data: StringifiableRequestData
+    data: AppData
 
     /**
      * Optional cookie expiration settings:
@@ -126,12 +126,12 @@ export enum RequestTypes {
     REQUEST_TYPE_SET = 'set',
 }
 
-export type AppConfig = AppConfigGetterOptions | AppConfigSetterOptions
+export type AppConfig<AppData = StringifiableRequestData> = AppConfigGetterOptions<AppData> | AppConfigSetterOptions<AppData>
 
-export type AppRequest = {
+export type AppRequest<AppData = StringifiableRequestData> = {
     key: string;
     type: RequestTypes;
-    config: AppConfig;
+    config: AppConfig<AppData>;
 }
 
 export type IframeConfig = {
@@ -144,6 +144,6 @@ export type IframeConfig = {
     /**
      * The array of all cookie configurations:
      */
-    cookieConfigs: CookieConfig[]
+    cookieConfigs?: CookieConfig[]
 
 }

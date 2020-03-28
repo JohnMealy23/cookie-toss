@@ -1,5 +1,5 @@
 import { getBaseDomain, getResponseKey } from "../utils";
-import { IframeResponse } from "types";
+import { IframeResponse, AppConfig } from "types";
 
 /**
  * Here we create the listening functions that will receive cookie-specific
@@ -15,11 +15,8 @@ interface ListenerSpecs {
 type Listener = (specs: ListenerSpecs) => void;
 
 export const setAppListener = <Data>(
-    cookieName: string,
-    iframeUrl: string,
-    resolve: (data: Data) => void,
-    reject: (err: Error) => void,
-): Listener => {
+    { cookieName, iframeUrl }: AppConfig<Data>
+): Promise<Data | null> => new Promise((resolve, reject) => {
 
     // Create a listener, which will await iframe responses
     const listener: Listener = ({ origin, data: maybeIframePayload }) => {
@@ -49,13 +46,13 @@ export const setAppListener = <Data>(
             if ('error' in response) {
                 // Uh-oh! Something went wrong! Relay error to caller:
                 reject(new Error(`Error received from ${cookieName} cookie request! ${response.error}`))
-            } else if (!('data' in response) || !response.data) {
-                reject(new Error(`No data received from ${cookieName} cookie request!`))
             } else {
                 // Success! Relay the data to the caller:
                 let result
                 try {
-                    result = JSON.parse(response.data)
+                    result = typeof response.data === 'string' ?
+                        JSON.parse(response.data) :
+                        response.data
                 } catch (e) {
                     result = response.data
                 }
@@ -66,6 +63,4 @@ export const setAppListener = <Data>(
 
     // Set the listener a-listenin':
     window.addEventListener('message', listener, false);
-
-    return listener
-}
+})

@@ -10,7 +10,7 @@ import * as cookie from 'js-cookie'
  */
 
 export const iframeEndpointFactory = (
-    { dataGetter, cookieName, expires }: CookieConfig
+    { handler, cookieName, expires }: CookieConfig
 ) => {
 
     // Create the logic that sits at a particular endpoint within
@@ -34,7 +34,7 @@ export const iframeEndpointFactory = (
             if (!dataStr) {
                 // If no cached dataStr, retrieve it from the
                 // user-defined getter and cache it:
-                dataStr = await dataGetter(config.data);
+                dataStr = await handler(config.data);
                 if (dataStr) {
                     cookie.set(cookieName, dataStr, { expires })
                 }

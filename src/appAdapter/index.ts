@@ -19,24 +19,25 @@ import {
  * application.
  */
 
-export const get = <Data>(config: AppConfigGetterOptions): Promise<Data> => {
+export const get = <Data>(config: AppConfigGetterOptions<Data>): Promise<Data | null> => {
     const type = RequestTypes['REQUEST_TYPE_GET']
     return makeRequest<Data>(config, type)
 }
 
-export const set = <Data>(config: AppConfigSetterOptions): Promise<Data> => {
+export const set = <Data>(config: AppConfigSetterOptions<Data>): Promise<Data | null> => {
     const type = RequestTypes['REQUEST_TYPE_SET']
     return makeRequest<Data>(config, type)
 }
 
-const makeRequest = <Data>(config: AppConfig, type: RequestTypes): Promise<Data> => new Promise((resolve, reject) => {
-
-    const { cookieName, iframeUrl } = config
-
+const makeRequest = async <Data>(
+    config: AppConfig<Data>, type: RequestTypes
+): Promise<Data | null> => {
     // Create and attach listener, to await iframe responses, and
     // relay them back to the host app.
-    setAppListener<Data>(cookieName, iframeUrl, resolve, reject)
+    const resultPromise = setAppListener<Data>(config)
 
     // Create the request for data, and send it into the iframe:
     sendRequest(type, config)
-});
+
+    return resultPromise
+};

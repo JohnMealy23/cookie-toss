@@ -5,12 +5,14 @@ import { getRequestKey } from '../utils';
 import { setCookie, getCookie } from './cookieGetAndSet';
 
 /**
- * In this file, we create a map of which request receivers.
- * These receivers will sit inside of the iframe, waiting for calls
- * from the dependent sites.
+ * In this file, add the getter and setter routes for requests
+ * incoming to the iframe.
  *
- * When the iframe receives a request, this map will allow it to route
- * it to the appropriate user-defined data getter for the cookie.
+ * We also create a map of the custom endpoints the user has defined.
+ *
+ * When the iframe receives a request, this route map will allow
+ * the iframe to route the request to the appropriate user-defined
+ * or default data getter for the cookie.
  */
 
 const routes = {
