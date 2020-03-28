@@ -2,14 +2,9 @@
  * Types to ensure only stringify-able data is passed:
  */
 export type Primitive = Boolean | Number | String | void
-export type PrimitiveArray = PrimitiveObject[] | PrimitiveArray[] | Primitive[]
+export type PrimitiveArray = PrimitiveObject[] | Primitive[] | Primitive[][]
 export type PrimitiveObject = { [k: string]: Primitive | PrimitiveObject | PrimitiveArray }
 export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive | undefined
-export type AppRequest = {
-    key: string;
-    data?: StringifiableRequestData
-    resetCookie?: boolean
-}
 
 /**
  * The object the iframe will receive from the app's post request:
@@ -25,7 +20,7 @@ export interface IframeListenerSpecs {
  */
 export interface IframeSuccessResponse {
     key: string;
-    data: string;
+    data: string | null;
 }
 export interface IframeErrorResponse {
     key: string;
@@ -38,17 +33,13 @@ export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
  * accepts requrests, processes them, cookies the retrieved value, and
  * relays the response outward, back to the dependent app.
  */
-export type IframeRouteEndpoint = (
-    data: StringifiableRequestData,
-    resetCookie?: boolean
-) => Promise<IframeResponse>;
+export type IframeRouteEndpoint = (config: AppConfig) => Promise<IframeResponse>;
 
 export interface IframeRoutes {
     [endpoint: string]: IframeRouteEndpoint;
 }
 
 export type IframeListener = (specs: IframeListenerSpecs) => Promise<void>;
-
 
 /**
  * An array of domains where satelite sites reside:
@@ -78,7 +69,7 @@ export type CookieConfig = {
 
 }
 
-export type AppConfig = {
+export type AppConfigBase = {
 
     /**
      * Domain on which the iframe will be hosted.  This is where all
@@ -91,6 +82,15 @@ export type AppConfig = {
      */
     cookieName: string;
 
+}
+
+export type AppConfigGetterOptions = AppConfigBase & {
+
+    /**
+     * Optional.  Purges the cookie on the hub domain when true.
+     */
+    resetCookie?: boolean
+
     /**
      * Optional data payload to send to iframe listener.  Note that once
      * the cookie has been set on the hub domain, this data will not come
@@ -101,10 +101,37 @@ export type AppConfig = {
      */
     data?: StringifiableRequestData;
 
+}
+
+export type AppConfigSetterOptions = AppConfigBase & {
+
     /**
-     * Optional.  Purges the cookie on the hub domain when true.
+     * Data to be cookied on iframe domain.
      */
-    resetCookie?: boolean
+    data: StringifiableRequestData
+
+    /**
+     * Optional cookie expiration settings:
+     */
+    expires?: number | Date
+
+}
+
+/**
+ * The different request types the app can make to the iframe:
+ */
+
+export enum RequestTypes {
+    REQUEST_TYPE_GET = 'get',
+    REQUEST_TYPE_SET = 'set',
+}
+
+export type AppConfig = AppConfigGetterOptions | AppConfigSetterOptions
+
+export type AppRequest = {
+    key: string;
+    type: RequestTypes;
+    config: AppConfig;
 }
 
 export type IframeConfig = {

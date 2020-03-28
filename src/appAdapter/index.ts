@@ -1,7 +1,11 @@
-import { getRequestKey } from "../utils";
-import { getAppListener } from "./getAppListener";
+import { setAppListener } from "./setAppListener";
 import { sendRequest } from "./sendRequest";
-import { AppConfig } from "../types";
+import {
+    RequestTypes,
+    AppConfigSetterOptions,
+    AppConfigGetterOptions,
+    AppConfig
+} from "../types";
 
 /**
  * In this file we set up the listener for the application,
@@ -15,23 +19,24 @@ import { AppConfig } from "../types";
  * application.
  */
 
-export const gimmeThatCookieGoodness = <Data>({
-    cookieName,
-    iframeUrl,
-    data,
-    resetCookie
-}: AppConfig): Promise<Data> => new Promise((resolve, reject) => {
+export const get = <Data>(config: AppConfigGetterOptions): Promise<Data> => {
+    const type = RequestTypes['REQUEST_TYPE_GET']
+    return makeRequest<Data>(config, type)
+}
+
+export const set = <Data>(config: AppConfigSetterOptions): Promise<Data> => {
+    const type = RequestTypes['REQUEST_TYPE_SET']
+    return makeRequest<Data>(config, type)
+}
+
+const makeRequest = <Data>(config: AppConfig, type: RequestTypes): Promise<Data> => new Promise((resolve, reject) => {
+
+    const { cookieName, iframeUrl } = config
 
     // Create and attach listener, to await iframe responses, and
     // relay them back to the host app.
-    const listener = getAppListener<Data>(cookieName, iframeUrl, resolve, reject)
-    window.addEventListener('message', listener, false);
+    setAppListener<Data>(cookieName, iframeUrl, resolve, reject)
 
     // Create the request for data, and send it into the iframe:
-    const request = {
-        key: getRequestKey(cookieName),
-        data,
-        resetCookie
-    };
-    sendRequest(iframeUrl, request)
+    sendRequest(type, config)
 });

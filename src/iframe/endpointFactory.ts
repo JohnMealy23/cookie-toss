@@ -15,9 +15,7 @@ export const iframeEndpointFactory = (
 
     // Create the logic that sits at a particular endpoint within
     // the iframe:
-    const endpoint: IframeRouteEndpoint = async (
-        requestDataPayload, resetCookie
-    ) => {
+    const endpoint: IframeRouteEndpoint = async (config) => {
 
         const key = getResponseKey(cookieName)
         let response: IframeResponse
@@ -25,7 +23,7 @@ export const iframeEndpointFactory = (
         try {
             let dataStr
 
-            if (resetCookie) {
+            if ('resetCookie' in config && config.resetCookie) {
                 // Remove cookie if dictated by app request:
                 cookie.remove(cookieName)
             } else {
@@ -36,7 +34,7 @@ export const iframeEndpointFactory = (
             if (!dataStr) {
                 // If no cached dataStr, retrieve it from the
                 // user-defined getter and cache it:
-                dataStr = await dataGetter(requestDataPayload);
+                dataStr = await dataGetter(config.data);
                 if (dataStr) {
                     cookie.set(cookieName, dataStr, { expires })
                 }

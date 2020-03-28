@@ -1,7 +1,8 @@
-import { IframeRoutes } from '../types';
+import { IframeRoutes, RequestTypes } from '../types';
 import { iframeEndpointFactory } from './endpointFactory';
 import { CookieConfig } from '../types';
 import { getRequestKey } from '../utils';
+import { setCookie, getCookie } from './cookieGetAndSet';
 
 /**
  * In this file, we create a map of which request receivers.
@@ -11,6 +12,11 @@ import { getRequestKey } from '../utils';
  * When the iframe receives a request, this map will allow it to route
  * it to the appropriate user-defined data getter for the cookie.
  */
+
+const routes = {
+    [RequestTypes.REQUEST_TYPE_GET]: getCookie,
+    [RequestTypes.REQUEST_TYPE_SET]: setCookie,
+}
 
 export const createIframeRoutes = (
     cookieConfigs: CookieConfig[],
@@ -23,4 +29,4 @@ export const createIframeRoutes = (
         }
         routes[endpointKey] = iframeEndpointFactory(cookieConfig)
         return routes
-    }, {})
+    }, routes)
