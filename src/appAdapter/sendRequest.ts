@@ -6,7 +6,7 @@ import { getRequestKey } from "../utils";
  * Here we inject or gather the cached iframe, then post the request to it.
  */
 
-export const sendRequest = async (type: RequestTypes, config: AppConfig) => {
+export const sendRequest = async <AppData>(type: RequestTypes, config: AppConfig<AppData>) => {
 
     const { cookieName, iframeUrl } = config
 
@@ -18,7 +18,7 @@ export const sendRequest = async (type: RequestTypes, config: AppConfig) => {
     const key = getRequestKey(cookieName)
 
     // Form the request object to send to the iframe:
-    const request: AppRequest = { key, type, config };
+    const request: AppRequest<AppData> = { key, type, config };
 
     // Send the iframe the request upon load into the DOM:
     if (iframe.contentWindow) {

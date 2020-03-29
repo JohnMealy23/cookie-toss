@@ -3,8 +3,8 @@ import { createIframeRoutes } from './createIframeRoutes';
 import { IframeConfig } from '../types';
 
 export const createIframe = ({
-    cookieConfigs,
     dependentDomains,
+    cookieConfigs = [],
 }: IframeConfig) => {
     const routes = createIframeRoutes(cookieConfigs)
     setIframeListener(routes, dependentDomains);

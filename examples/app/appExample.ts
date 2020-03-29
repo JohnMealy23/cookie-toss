@@ -4,13 +4,13 @@ import {
     get,
     set
 } from "../../src";
-import { exampleCookieName, exampeIframeUrl } from "../exampleConfig";
+import { exampleCookieName, exampleIframeUrl, MyAppData } from "../exampleConfig";
 
-export const appConfigForCustomGetter: AppConfigGetterOptions = {
+export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {
 
     // The URL of the iframe living on the central domain where
     // all cookies will be stored:
-    iframeUrl: exampeIframeUrl,
+    iframeUrl: exampleIframeUrl,
 
     // Name of cookie stored on hub site:
     cookieName: exampleCookieName,
@@ -20,7 +20,7 @@ export const appConfigForCustomGetter: AppConfigGetterOptions = {
         reason: 'Not sure why anyone would use this',
         but: 'just in case...',
         makesItToIframe: true,
-        loneliestNumber: 1
+        appId: 'app-123'
     }
 
 }
@@ -30,13 +30,14 @@ export const appConfigForSimpleSetter: AppConfigSetterOptions = {
 
     // The URL of the iframe living on the central domain where
     // all cookies will be stored:
-    iframeUrl: exampeIframeUrl,
+    iframeUrl: exampleIframeUrl,
 
     // Name of cookie stored on hub site:
     cookieName: 'cookie-set-by-app',
 
     // Test payload:
-    data: ['hello there']
+    data: [{ well: 'hello there' }]
+
 }
 
 const test1 = async () => {
@@ -57,11 +58,9 @@ const test1 = async () => {
     const result2 = await get(appConfigForCustomGetter)
     console.log('Back in the app with the data retrieved from the iframe.')
     console.log('Behold!  The results were consistent between calls:', { result1, result2 })
-
 }
 
 const test2 = async () => {
-
     console.log('\n########## Test 2 - Using simple getter and setter ##########')
     // Request 1
     console.log('Inside of satelite app.  About to send a set request to the iframe.')
@@ -72,7 +71,6 @@ const test2 = async () => {
     // Request 2
     const result4 = await get(appConfigForSimpleSetter)
     console.log('Behold!  The results were consistent between calls:', { result3, result4 })
-
 }
 
 (async () => {
