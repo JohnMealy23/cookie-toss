@@ -98,13 +98,54 @@ const result = await get({
 console.log(result) // Data returned by `asyncCallToServerFn` in iframe
 ```
 
+## API
+
+### `createIframe(options)`
+
+The function for producing the code that lives in the iframe on the hub domain.
+
+`options` parameters:
+
+| option | description | required | type | example |
+|-|-|-|-|-|
+| dependentDomains | An array of the domains allowed to access cookies on the hub domain. | `true` | Array | `[ 'example.com' ]` |
+| cookieConfigs | An array of configurations for each cookie the iframe will manage. | `false` | Array | See below. |
+| cookieConfigs[0].cookieName | The name the cookie will be stored under. Also used when retrieving the value. | `true` | String | `'snickerdoodle'` |
+| cookieConfigs[0].handler | The function that retrieves the data for the cookie value. Optionally receives an argument the app sends when requesting the cookie. | `true` | Function | () => axios(myEndpoint) |
+| cookieConfigs[0].expires | The number of days before the cookie expires. | `false` | Number | `7` |
+
+### `set(options)`
+
+The function used by the application for setting the cookie on the hub domain.  Not necessary if the cookie has a cookie config in the passed into the `createIframe` function.
+
+`options` parameters:
+
+| option | description | required | type | example |
+|-|-|-|-|-|
+| iframeUrl | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
+| cookieName | The name the cookie will be stored on under the hub domain. | `true` | String | `'samoa'` |
+| data | The value to be cookied. | `true` | Any primitive or stringify-able value. | `{ c: 'is for cookie' }` |
+
+### `get(options)`
+
+The function used by the application for getting the cookie from the hub domain.  Must reference a cookie previously set by the `set` function, or configuring in an iframe `cookieConfig` object.
+
+`options` parameters:
+
+| option | description | required | type | example |
+|-|-|-|-|-|
+| iframeUrl | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
+| cookieName | The name of the cookie to be retrieved from the hub domain. | `true` | String | `'samoa'` |
+| data | The value that the iframe's cookieConfig handler will receive, if the cookie has a handler. | `false` | Any primitive or stringify-able value. | `{ userType: 'B' }` |
+| resetCookie | Only applicable to cookies configured by with a cookieConfig in the createIframe function.  If `true`, will purge the cookie, forcing the iframe's handler to re-retrieve the cookie value. | `false` | Boolean | `true` |
+
 ## To Test
 
 ### Unit tests
 
-WIP
+[TBD]
 
-### Testing
+### Smoke Tests
 
 In one terminal run:
 
