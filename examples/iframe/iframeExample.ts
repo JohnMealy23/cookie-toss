@@ -1,21 +1,21 @@
 import { createIframe, IframeConfig } from "../../lib";
 import { handler } from "./handler";
-import { exampleCookieName } from "../exampleConfig";
+import { exampleDataKey } from "../exampleConfig";
 
 export const iframeConfig: IframeConfig = {
 
-    // List of approved URLs, from which cookies can be requested:
+    // List of approved URLs, from which data can be requested:
     dependentDomains: [
         'dependant-site.com',
     ],
 
-    // List of cookie getters to be executed inside the iframe,
+    // List of data getters to be executed inside the iframe,
     // upon request from the host app:
-    cookieConfigs: [
+    dataConfigs: [
         {
-            cookieName: exampleCookieName,
+            dataKey: exampleDataKey,
             handler,
-            expires: Infinity
+            expires: 3
         }
     ]
 

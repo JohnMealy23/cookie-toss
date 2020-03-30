@@ -1,7 +1,7 @@
 import { StringifiableRequestData } from '../types'
 
-const msInADay = 86400000
-const thirtyYears = msInADay * 365 * 30
+const msInADay = 1000 * 60 * 60 * 24
+const thirtyYears = msInADay * 365.25 * 30
 
 export const setWithExpiry = (
 	key: string,
@@ -25,6 +25,7 @@ export const setWithExpiry = (
 }
 
 const getMsToLive = (daysToLive: number): number => {
+	// LS can't cache 'infinity', so we'll reduce it to 30 years:
 	if (daysToLive === Infinity) {
 		daysToLive = thirtyYears
 	}

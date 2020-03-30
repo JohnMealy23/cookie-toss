@@ -1,15 +1,25 @@
 # Cookie Toss
 
-A package that makes sharing cookies across domains a thing of ease.
+A package that makes sharing local data across domains a thing of ease.
 
 This package outputs...
 
-- A script to be hosted on a central domain (the "hub domain"), where all cookies are stored.
-- An module to be used in applications on other "satellite" domains or hub domains, which retrieves and sets cookie values stored on the hub domain.
+- A script to be hosted on a central domain, the "hub domain", where all user data is stored.
+- A module to be used in applications on "satellite" domains, which retrieves and sets localStorage values on the hub domain.
+
+---
+
+### A Note on the Name
+
+Yes, yes - it's called "Cookie Toss", but it uses localStorage.  In the first iteration, cookies were used, but due to current and upcoming changes to browser cookie policies, not to mention larger hard drive allowances for LS, it made more sense to move it to be localStorage based.
+
+Cookie Toss it will remain, though.
+
+---
 
 ## Overview
 
-Cookies are the bits of data we save to a user's hard drive for later usage by our application. Each cookie we save is scoped to the domain the user is on when the cookie is saved. Likewise, when retrieving cookies, we're restricted to only access cookies saved to the domain our code is running on.
+localStorage values are the pieces of data we save to a user's hard drive for later usage by our application. Each value we save is scoped to the domain the user is on when the save takes place. Likewise, when retrieving the values, we're restricted to only access those values saved to the domain our code is running on.
 
 This is great, as it disallows a user's shopping site from grabbing data from, say, their social media site, without the consent of the user or the social media site.
 
@@ -50,9 +60,10 @@ import { set } from "cookie-toss";
 const result = await set({
   // This is the URL at which you've hosted the output of `createIframe`, above:
   iframeUrl: 'https://hub.com/cookie-toss.html',
-  cookieName: 'chocolate-chip-oatmeal',
+  dataKey: 'chocolate-chip-oatmeal',
   data: {
-      c: 'is for cookie'
+      c: 'is for localStorage',
+      and: 'that\'s good enough for me.'
   }
 });
 ```
@@ -62,10 +73,16 @@ import { get } from "cookie-toss";
 
 const result = await get({
   iframeUrl: 'https://hub.com/cookie-toss.html',
-  cookieName: 'chocolate-chip-oatmeal',
+  dataKey: 'chocolate-chip-oatmeal',
 });
 
-console.log(result) // { c: 'is for cookie' }
+console.log(result)
+/* Logs:
+{
+    c: 'is for localStorage',
+    and: 'that\'s good enough for me.'
+}
+*/
 ```
 
 However, one of the strengths of cookie-toss is that it allows you to make the iframe the source of truth, alleviating potential race conditions and non-DRY behavior in your satellite apps.  This is done by using handlers in the iframe to do the cookie fetching.  Read on.
@@ -80,26 +97,26 @@ const dependentDomains = ['satellite1.com', 'satellite2.com']
 
 createIframe({
     dependentDomains,
-    cookieConfigs: [
+    dataConfigs: [
         {
-            cookieName: 'snickerdoodle',
+            dataKey: 'snickerdoodle',
             handler: myFetchFromServerFn,
-            expires: Infinity
+            expires: 3
         }
     ]
 });
 ```
 
-In the above case, the iframe will now host our data getter, `myFetchFromServerFn`.  The value returned by this async function will be cookied at `'snickerdoodle'` in the iframe, and become available to all satellite domains.
+In the above case, the iframe will now host our data getter, `myFetchFromServerFn`.  The value returned by this async function will be stored at the `'snickerdoodle'` key in the iframe, and become available to all satellite domains.
 
-We now can add the following code to satellite1.com and satellite2.com.  The first satellite to call the iframe will trigger the iframe to call `myFetchFromServerFn` and cookie its response.  In the second call, the iframe will reply immediately with the cached cookie value.
+We now can add the following code to satellite1.com and satellite2.com.  The first satellite to call the iframe will trigger the iframe to call `myFetchFromServerFn` and cache the response on the hub.  In the second call, the iframe will reply immediately with the cached value.
 
 ```javascript
 import { get } from "cookie-toss";
 
 const result = await get({
   iframeUrl: 'https://hub.com/cookie-toss.html',
-  cookieName: 'snickerdoodle',
+  dataKey: 'snickerdoodle',
 });
 
 console.log(result) // Data returned by `myFetchFromServerFn` in iframe
@@ -115,36 +132,38 @@ The function for producing the code that lives in the iframe on the hub domain.
 
 | option | description | required | type | example |
 |-|-|-|-|-|
-| dependentDomains | An array of the domains allowed to access cookies on the hub domain. Do not include protocols or paths. | `true` | Array | `[ 'example.com' ]` |
-| cookieConfigs | An array of configurations for each cookie the iframe will manage. | `false` | Array | See below. |
-| cookieConfigs[0].cookieName | The name the cookie will be stored under. Also used when retrieving the value. | `true` | String | `'snickerdoodle'` |
-| cookieConfigs[0].handler | The function that retrieves the data for the cookie value. Optionally receives an argument the app sends when requesting the cookie. | `true` | Function | () => axios(myEndpoint) |
-| cookieConfigs[0].expires | The number of days before the cookie expires. | `false` | Number | `7` |
+| `dependentDomains` | An array of the domains allowed to access data on the hub domain. Do not include protocols or paths. | `true` | Array | `[ 'example.com' ]` |
+| `dataConfigs` | An array of configurations for each data value the iframe will manage. | `false` | Array | See below. |
+| `dataConfigs[n].dataKey` | The localStorage key the data will be stored under. Also used when retrieving the value. | `true` | String | `'snickerdoodle'` |
+| `dataConfigs[n].handler` | The function that retrieves the data for the localStorage value. Optionally receives an argument the app sends when requesting the datum. | `true` | Function | ``(userName) => axios(`${myEndpoint}?user=${userName}`)`` |
+| `dataConfigs[n].expires` | The number of days before the data expires. | `false` | Number | `7` |
 
 ### `set(options)`
 
-The function used by the application for setting the cookie on the hub domain.  Not necessary if the cookie has a cookie config in the passed into the `createIframe` function.
+The function used by the application for setting the localStorage value on the hub domain.
+
+It is not necessary to use `set` if the value has a `dataConfig` configured in the `createIframe` function on the hub. In this case, the iframe becomes the setter.
 
 `options` parameters:
 
 | option | description | required | type | example |
 |-|-|-|-|-|
-| iframeUrl | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
-| cookieName | The name the cookie will be stored on under the hub domain. | `true` | String | `'samoa'` |
-| data | The value to be cookied. | `true` | Any primitive or stringify-able value. | `{ c: 'is for cookie' }` |
+| `iframeUrl` | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
+| `dataKey` | The localStorage key the data will be stored on under the hub domain. | `true` | String | `'samoa'` |
+| `data` | The value to be stored. | `true` | Any primitive or stringify-able value. | `{ c: 'is for cookie' }` |
 
 ### `get(options)`
 
-The function used by the application for getting the cookie from the hub domain.  Must reference a cookie previously set by the `set` function, or configuring in an iframe `cookieConfig` object.
+The function used by the application for getting the datum from the hub domain.  Must reference a `dataKey` previously set by the `set` function, or configuring in an iframe `dataConfigs` object.
 
 `options` parameters:
 
 | option | description | required | type | example |
 |-|-|-|-|-|
-| iframeUrl | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
-| cookieName | The name of the cookie to be retrieved from the hub domain. | `true` | String | `'samoa'` |
-| data | The value that the iframe's cookieConfig handler will receive, if the cookie has a handler. | `false` | Any primitive or stringify-able value. | `{ userType: 'B' }` |
-| resetCookie | Only applicable to cookies configured by with a cookieConfig in the createIframe function.  If `true`, will purge the cookie, forcing the iframe's handler to re-retrieve the cookie value. | `false` | Boolean | `true` |
+| `iframeUrl` | The full URL on the hub domain where the iframe lives. | `true` | String | https://my-hub-domain.com |
+| `dataKey` | The name under which the datum is stored on the hub domain. | `true` | String | `'samoa'` |
+| `handlerPayload` | The value that the iframe's `dataConfig`'s handler will receive.  Only applicable to `dataKey`s with `dataConfig` objects passed into the `createIframe` function on the hub domain. | `false` | Any primitive or stringify-able value. | `{ userType: 'B' }` |
+| `resetData` | If `true`, will purge the data, forcing the iframe's handler to re-retrieve the data value.  Only applicable to `dataKey`s with `dataConfig` objects passed into the `createIframe` function on the hub domain. | `false` | Boolean | `true` |
 
 ## To Test
 

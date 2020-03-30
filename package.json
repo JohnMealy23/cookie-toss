@@ -22,8 +22,13 @@
     "iframe",
     "iframes",
     "cross-origin",
+    "cross-domain",
     "cross-site",
     "storage",
+    "localStorage",
+    "local-storage",
+    "data-sharing",
+    "data-access",
     "user-data"
   ],
   "repository": {
@@ -31,10 +36,8 @@
     "url": "git://github.com/JohnMealy23/cookie-toss"
   },
   "dependencies": {
-    "@types/js-cookie": "^2.1.0",
     "@types/node": "^9.3.0",
     "@types/url-parse": "^1.4.3",
-    "js-cookie": "^2.2.1",
     "types": "^0.1.1",
     "typescript": "^3.6.3",
     "url-parse": "^1.4.7",
