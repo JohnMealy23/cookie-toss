@@ -210,4 +210,22 @@ You'll note no values are stored in the localStorage of http://dependant-site.co
 
 ### Build
 
-Running `tsc` deposits built files in the `/lib` folder.
+To build the bundle, run:
+
+```bash
+npm run build
+```
+
+The output can be found in the `/lib` folder.
+
+### Deploy
+
+To deploy a new version:
+
+- Update the CHANGELOG.md with the recent changes.
+- Update the package.json with the new version number.
+- Run the following bash command:
+
+```bash
+npm run deploy
+```
