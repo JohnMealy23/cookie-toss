@@ -1,9 +1,10 @@
 # Changelog
 
-## 1.1.3 - 2020.03.30
+## 2.0.0 - 2020.03.30
 
-Removed all references to "cookie" as this is now localStorage based.
-Updated docs and beefed up error handling.
+- Removed all references to "cookie" as this is now localStorage based.
+- Updated API to dis-include "cookie" references, thus the breaking change.
+- Updated docs and beefed up error handling.
 
 ## 1.1.2 - 2020.03.30
 
