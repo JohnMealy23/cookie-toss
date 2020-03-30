@@ -1,6 +1,7 @@
-// Import `gimmeThatCookieGoodness` into the dependent application,
-// and pass it the iframe's URL on the hub site and cookie name
-// to retrieve the cookie value from the hub site:
+// To retrieve and set the data values, import `get` and
+// `set` into the dependent application,
+// and pass them the iframe's URL and the dataKey under
+// which the data lives.
 export { get, set } from './appAdapter';
 
 // Import `createIframe` into your project, and init it with the
@@ -12,7 +13,7 @@ export { createIframe } from './iframe';
 export {
     AppConfigGetterOptions,
     AppConfigSetterOptions,
-    CookieConfig,
+    DataConfig,
     IframeConfig,
     StringifiableRequestData
 } from './types'

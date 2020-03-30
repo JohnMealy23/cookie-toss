@@ -4,19 +4,19 @@ import {
     AppConfigGetterOptions,
     AppConfigSetterOptions,
 } from "../../lib";
-import { exampleCookieName, exampleIframeUrl, MyAppData } from "../exampleConfig";
+import { exampleDataKey, exampleIframeUrl, MyAppData } from "../exampleConfig";
 
 export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {
 
     // The URL of the iframe living on the central domain where
-    // all cookies will be stored:
+    // all data will be stored:
     iframeUrl: exampleIframeUrl,
 
-    // Name of cookie stored on hub site:
-    cookieName: exampleCookieName,
+    // Name of data stored on hub site:
+    dataKey: exampleDataKey,
 
     // Test payload:
-    data: {
+    handlerPayload: {
         reason: 'Not sure why anyone would use this',
         but: 'just in case...',
         makesItToIframe: true,
@@ -29,11 +29,11 @@ export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {
 export const appConfigForSimpleSetter: AppConfigSetterOptions = {
 
     // The URL of the iframe living on the central domain where
-    // all cookies will be stored:
+    // all data will be stored:
     iframeUrl: exampleIframeUrl,
 
-    // Name of cookie stored on hub site:
-    cookieName: 'cookie-set-by-app',
+    // Name of data stored on hub site:
+    dataKey: 'data-set-by-app',
 
     // Test payload:
     data: [{ well: 'hello there' }]
@@ -42,18 +42,18 @@ export const appConfigForSimpleSetter: AppConfigSetterOptions = {
 
 const test1 = async () => {
     // Request 1
-    console.log('########## Test 1 - Get Cookie with Custom Getter in Iframe ##########')
+    console.log('########## Test 1 - Get Data with Custom Getter in Iframe ##########')
     console.log('Inside of satellite app.  About to send request to the iframe.')
-    appConfigForCustomGetter.resetCookie = true
-    console.log('Resetting the cookie this time, to have a clean slate for testing.')
+    appConfigForCustomGetter.resetData = true
+    console.log('Resetting the data this time, to have a clean slate for testing.')
     console.log({ appConfigForCustomGetter })
     const result1 = await get(appConfigForCustomGetter)
     console.log('Back in the app with the data retrieved from the iframe:', { result1 })
 
     // Request 2
-    console.log('Retrieving the cookie again.  Turning off the cookieReset this time, in order to pick up the first cookie-ing')
-    appConfigForCustomGetter.resetCookie = false
-    console.log('Note that because we don\'t hit the iframe data getter this time (due to the cookie being set), you won\'t see the logs from that part of the code.')
+    console.log('Retrieving the data again.  Turning off the dataReset this time, in order to pick up the initial data setting')
+    appConfigForCustomGetter.resetData = false
+    console.log('Note that because we don\'t hit the iframe data getter this time (due to the data being set), you won\'t see the logs from that part of the code.')
     console.log({ appConfigForCustomGetter })
     const result2 = await get(appConfigForCustomGetter)
     console.log('Back in the app with the data retrieved from the iframe.')

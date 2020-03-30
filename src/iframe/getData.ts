@@ -2,10 +2,10 @@ import { IframeRouteEndpoint, AppConfig } from '../types'
 import { getWithExpiry } from './localStorageUtils'
 import { REQUEST_TYPE_RESPONSE } from '../constants'
 
-export const getData: IframeRouteEndpoint = ({ cookieName }: AppConfig) => {
+export const getData: IframeRouteEndpoint = ({ dataKey }: AppConfig) => {
     return {
         type: REQUEST_TYPE_RESPONSE,
-        cookie: cookieName,
-        data: getWithExpiry(cookieName)
+        dataKey: dataKey,
+        data: getWithExpiry(dataKey)
     }
 }

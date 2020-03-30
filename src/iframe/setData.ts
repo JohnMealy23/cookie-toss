@@ -3,17 +3,20 @@ import { setWithExpiry } from './localStorageUtils'
 import { REQUEST_TYPE_RESPONSE } from '../constants'
 
 export const setData: IframeRouteEndpoint = (config) => {
-    const { cookieName, data } = config
+    if (!('data' in config)) {
+        throw new Error(`Must include a data payload in calls to setData with ${config.dataKey} dataKey`)
+    }
+    const { dataKey, data } = config
     let expires
     if ('expires' in config) {
         expires = config.expires
     }
 
-    const savedDate = setWithExpiry(cookieName, data, expires)
+    const savedDate = setWithExpiry(dataKey, data, expires)
 
     return {
         type: REQUEST_TYPE_RESPONSE,
-        cookie: config.cookieName,
+        dataKey: config.dataKey,
         data: savedDate
     }
 }

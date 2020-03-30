@@ -10,11 +10,12 @@ import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
 
 /**
  * In this file we set up the listener for the application,
- * then send out the request for the cookie value to the iframe.
+ * then send out the request for the data to the iframe.
  *
  * The iframe will receive the request and check for a pre-existing
- * cookie value.  If that value does not exist, the iframe will
- * execute the user-defined data-getter, cookie-ing the response.
+ * value.  If that value does not exist, the iframe will
+ * execute the user-defined data-getter, caching the response in
+ * localStorage.
  *
  * Finally, the iframe will relay to recovered value back to the
  * application.

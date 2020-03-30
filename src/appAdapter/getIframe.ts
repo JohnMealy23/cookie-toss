@@ -6,7 +6,7 @@ let cache: IframeCache = {}
 /**
  * Create and cache the iframe.
  *
- * We're caching by domain, in case mutliple hub sites are referenced
+ * We're caching by domain, in case multiple hub sites are referenced
  * from a single satellite domain.
  *
  * We're returning a promise to avoid a race condition.  If two calls

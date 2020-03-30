@@ -1,6 +1,6 @@
 import { IframeRoutes } from '../types';
 import { iframeEndpointFactory } from './endpointFactory';
-import { CookieConfig } from '../types';
+import { DataConfig } from '../types';
 import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
 import { getData } from './getData';
 import { setData } from './setData';
@@ -12,8 +12,8 @@ import { setData } from './setData';
  * We also create a map of the custom endpoints the user has defined.
  *
  * When the iframe receives a request, this route map will allow
- * the iframe to route the request to the appropriate user-defined
- * or default data getter for the cookie.
+ * the iframe to direct the request to the appropriate user-defined
+ * or default handler for the data type.
  */
 
 const routes = {
@@ -22,13 +22,13 @@ const routes = {
 }
 
 export const createIframeRoutes = (
-    cookieConfigs: CookieConfig[],
-): IframeRoutes => cookieConfigs
-    .reduce((routes: IframeRoutes, cookieConfig) => {
-        const { cookieName } = cookieConfig
-        if (routes[cookieName]) {
-            throw new Error(`Multiple modules are attempting to define the ${cookieName} cookie.  Please ensure the getter for this is set once per implementation.`)
+    dataConfigs: DataConfig[],
+): IframeRoutes => dataConfigs
+    .reduce((routes: IframeRoutes, dataConfigs) => {
+        const { dataKey } = dataConfigs
+        if (routes[dataKey]) {
+            throw new Error(`Multiple modules are attempting to define the ${dataKey} DataConfig.  Please ensure the configuration for this dataKey is set once per implementation.`)
         }
-        routes[cookieName] = iframeEndpointFactory(cookieConfig)
+        routes[dataKey] = iframeEndpointFactory(dataConfigs)
         return routes
     }, routes)

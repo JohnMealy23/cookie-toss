@@ -20,20 +20,20 @@ export interface IframeListenerSpecs {
  */
 export interface IframeSuccessResponse {
     type: RequestTypeResponse;
-    cookie: string;
+    dataKey: string;
     data: StringifiableRequestData;
 }
 export interface IframeErrorResponse {
     type: RequestTypeResponse;
-    cookie: string;
+    dataKey: string;
     error: string;
 }
 export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
 
 /**
  * The signature of a single endpoint within the iframe.  Each endpoint
- * accepts requests, processes them, cookies the retrieved value, and
- * relays the response outward, back to the dependent app.
+ * accepts requests, processes them, cache the retrieved value in
+ * localStorage, and relays the response outward, back to the dependent app.
  */
 export type IframeRouteEndpoint = (config: AppConfig) => Promise<IframeResponse> | IframeResponse;
 
@@ -49,23 +49,23 @@ export type IframeListener = (specs: IframeListenerSpecs) => Promise<void>;
 export type DependentDomains = string[]
 
 /**
- * The object the configures a single cookie endpoint within the iframe:
+ * The object the configures a single data endpoint within the iframe:
  */
-export type CookieConfig = {
+export type DataConfig = {
 
     /**
-     * The cookie name on the hub domain where the cookie will be stored:
+     * The name on the hub domain under which the data will be stored:
      */
-    cookieName: string;
+    dataKey: string;
 
     /**
      * A function that resides in the iframe, and retrieves the data that
-     * will be stored in the cookie on the hub domain:
+     * will be stored in the data on the hub domain:
      */
     handler: (requestData?: StringifiableRequestData) => Promise<string>;
 
     /**
-     * Optional cookie expiration settings:
+     * Optional data expiration settings:
      */
     expires?: number
 
@@ -75,45 +75,45 @@ export type AppConfigBase = {
 
     /**
      * Domain on which the iframe will be hosted.  This is where all
-     * cookies will be stored.
+     * data will be stored.
      */
     iframeUrl: string;
 
     /**
-     * The cookie name on the hub domain where the cookie will be stored:
+     * The name on the hub domain under which the data will be stored:
      */
-    cookieName: string;
+    dataKey: string;
 
 }
 
 export type AppConfigGetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
-     * Optional.  Purges the cookie on the hub domain when true.
+     * Optional.  Purges the data on the hub domain when true.
      */
-    resetCookie?: boolean
+    resetData?: boolean
 
     /**
-     * Optional data payload to send to iframe listener.  Note that once
-     * the cookie has been set on the hub domain, this data will not come
-     * into play.
+     * Optional argument sent to the iframe handler.  Note that once
+     * the data has been set on the hub domain, this argument will not
+     * come into play.
      *
-     * Use the `resetCookie` option to purge the cookie data, if you'd like
-     * to bring the `data` back into play.
+     * Use the `resetData` option to purge the data from the hub,
+     * thus bringing the `handlerPayload` back into play.
      */
-    data?: AppData;
+    handlerPayload?: AppData;
 
 }
 
 export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
-     * Data to be cookied on iframe domain.
+     * Data to be stored on iframe domain.
      */
     data: AppData
 
     /**
-     * Optional cookie expiration settings:
+     * Optional data expiration settings:
      */
     expires?: number
 
@@ -144,8 +144,8 @@ export type IframeConfig = {
     dependentDomains: DependentDomains;
 
     /**
-     * The array of all cookie configurations:
+     * The array of all data configurations:
      */
-    cookieConfigs?: CookieConfig[]
+    dataConfigs?: DataConfig[]
 
 }

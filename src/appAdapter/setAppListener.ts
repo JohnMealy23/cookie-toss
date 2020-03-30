@@ -2,9 +2,10 @@ import { getBaseDomain } from '../utils';
 import { IframeResponse, AppConfig } from '../types';
 
 /**
- * Here we create the listening functions that will receive cookie-specific
- * requests within the iframe, retrieve the data via the user-defined data-
- * getter, cookie said data, then return it to the requesting application.
+ * Here we create the listening functions that will receive data-type specific
+ * requests within the iframe, retrieve the data via the user-defined DataConfig
+ * handler, cache said data in localStorage, then return it to the requesting
+ * application.
  */
 
 interface ListenerSpecs {
@@ -17,7 +18,7 @@ type Listener = (specs: ListenerSpecs) => void;
 const responseTypeName = 'response'
 
 export const setAppListener = <Data>(
-    { cookieName, iframeUrl }: AppConfig<Data>
+    { dataKey, iframeUrl }: AppConfig<Data>
 ): Promise<Data | null> => new Promise((resolve, reject) => {
 
     // Create a listener, which will await iframe responses
@@ -41,15 +42,15 @@ export const setAppListener = <Data>(
             requesterBaseDomain === expectedBaseDomain &&
             // and that this is a response from the iframe:
             response.type === responseTypeName &&
-            // and that the response is intended for this cookie type
-            response.cookie === cookieName
+            // and that the response is intended for this data type
+            response.dataKey === dataKey
         ) {
             // Clean up:
             window.removeEventListener('message', listener);
 
             if ('error' in response) {
                 // Uh-oh! Something went wrong! Relay error to caller:
-                reject(new Error(`Error received from ${cookieName} cookie request! ${response.error}`))
+                reject(new Error(`Error received from ${dataKey} data request! ${response.error}`))
             } else {
                 // Success! Relay the data to the caller:
                 let result
