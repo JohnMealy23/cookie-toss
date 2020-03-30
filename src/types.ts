@@ -1,10 +1,10 @@
 /**
  * Types to ensure only stringify-able data is passed:
  */
-export type Primitive = Boolean | Number | String | void
+export type Primitive = Boolean | Number | String | null | void
 export type PrimitiveArray = PrimitiveObject[] | Primitive[] | Primitive[][]
 export type PrimitiveObject = { [k: string]: Primitive | PrimitiveObject | PrimitiveArray }
-export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive | undefined
+export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive
 
 /**
  * The object the iframe will receive from the app's post request:
@@ -19,21 +19,23 @@ export interface IframeListenerSpecs {
  * The possible responses from the iframe:
  */
 export interface IframeSuccessResponse {
-    key: string;
-    data: string | null;
+    type: RequestTypeResponse;
+    cookie: string;
+    data: StringifiableRequestData;
 }
 export interface IframeErrorResponse {
-    key: string;
+    type: RequestTypeResponse;
+    cookie: string;
     error: string;
 }
 export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
 
 /**
  * The signature of a single endpoint within the iframe.  Each endpoint
- * accepts requrests, processes them, cookies the retrieved value, and
+ * accepts requests, processes them, cookies the retrieved value, and
  * relays the response outward, back to the dependent app.
  */
-export type IframeRouteEndpoint = (config: AppConfig) => Promise<IframeResponse>;
+export type IframeRouteEndpoint = (config: AppConfig) => Promise<IframeResponse> | IframeResponse;
 
 export interface IframeRoutes {
     [endpoint: string]: IframeRouteEndpoint;
@@ -42,7 +44,7 @@ export interface IframeRoutes {
 export type IframeListener = (specs: IframeListenerSpecs) => Promise<void>;
 
 /**
- * An array of domains where satelite sites reside:
+ * An array of domains where satellite sites reside:
  */
 export type DependentDomains = string[]
 
@@ -65,7 +67,7 @@ export type CookieConfig = {
     /**
      * Optional cookie expiration settings:
      */
-    expires?: number | Date
+    expires?: number
 
 }
 
@@ -113,7 +115,7 @@ export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConf
     /**
      * Optional cookie expiration settings:
      */
-    expires?: number | Date
+    expires?: number
 
 }
 
@@ -121,15 +123,15 @@ export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConf
  * The different request types the app can make to the iframe:
  */
 
-export enum RequestTypes {
-    REQUEST_TYPE_GET = 'get',
-    REQUEST_TYPE_SET = 'set',
-}
+export type RequestTypes = RequestTypeGet | RequestTypeSet | RequestTypeResponse
+
+export type RequestTypeGet = 'get'
+export type RequestTypeSet = 'set'
+export type RequestTypeResponse = 'response'
 
 export type AppConfig<AppData = StringifiableRequestData> = AppConfigGetterOptions<AppData> | AppConfigSetterOptions<AppData>
 
 export type AppRequest<AppData = StringifiableRequestData> = {
-    key: string;
     type: RequestTypes;
     config: AppConfig<AppData>;
 }
@@ -137,7 +139,7 @@ export type AppRequest<AppData = StringifiableRequestData> = {
 export type IframeConfig = {
 
     /**
-     * An array of domains where satelite sites reside:
+     * An array of domains where satellite sites reside:
      */
     dependentDomains: DependentDomains;
 

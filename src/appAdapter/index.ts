@@ -6,6 +6,7 @@ import {
     AppConfigGetterOptions,
     AppConfig
 } from "../types";
+import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from "../constants";
 
 /**
  * In this file we set up the listener for the application,
@@ -20,12 +21,12 @@ import {
  */
 
 export const get = <Data>(config: AppConfigGetterOptions<Data>): Promise<Data | null> => {
-    const type = RequestTypes['REQUEST_TYPE_GET']
+    const type = REQUEST_TYPE_GET
     return makeRequest<Data>(config, type)
 }
 
 export const set = <Data>(config: AppConfigSetterOptions<Data>): Promise<Data | null> => {
-    const type = RequestTypes['REQUEST_TYPE_SET']
+    const type = REQUEST_TYPE_SET
     return makeRequest<Data>(config, type)
 }
 

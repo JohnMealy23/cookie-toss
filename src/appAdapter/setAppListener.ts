@@ -1,5 +1,5 @@
-import { getBaseDomain, getResponseKey } from "../utils";
-import { IframeResponse, AppConfig } from "types";
+import { getBaseDomain } from "../utils";
+import { IframeResponse, AppConfig } from "../types";
 
 /**
  * Here we create the listening functions that will receive cookie-specific
@@ -13,6 +13,8 @@ interface ListenerSpecs {
 };
 
 type Listener = (specs: ListenerSpecs) => void;
+
+const responseTypeName = 'response'
 
 export const setAppListener = <Data>(
     { cookieName, iframeUrl }: AppConfig<Data>
@@ -37,8 +39,10 @@ export const setAppListener = <Data>(
         if (
             // Ensure the caller is the main site's iframe
             requesterBaseDomain === expectedBaseDomain &&
-            // and that the path is intended for this module
-            response.key === getResponseKey(cookieName)
+            // and that this is a response from the iframe:
+            response.type === responseTypeName &&
+            // and that the response is intended for this cookie type
+            response.cookie === cookieName
         ) {
             // Clean up:
             window.removeEventListener('message', listener);
