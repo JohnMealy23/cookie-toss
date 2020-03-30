@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.2 - 2020.03.30
+
+Improved smoke test output.
+
 ## 2.0.1 - 2020.03.30
 
 Improved identification/security of requests sent between iframe and app
