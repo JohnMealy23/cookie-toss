@@ -91,7 +91,7 @@ However, one of the strengths of cookie-toss is that it allows you to make the i
 
 ### Iframe Handlers
 
-By setting a handler under a `dataKey` in the iframe, your satellite apps can all call for data, and the hub iframe will handle the getting of the data.  This means no one app has to set the data before others can retrieve it.
+By setting a `handler` for a `dataKey` in the iframe, your satellite apps can all call for data, and the hub iframe will handle the getting of the data.  This means no one app has to set the data before others can retrieve it.
 
 Iframe on hub.com/cookie-toss.html:
 
@@ -107,6 +107,7 @@ createIframe({
         {
             dataKey: 'userUuid',
             handler: createUserUuid,
+            expires: 365 // One year
         }
     ]
 });
@@ -210,4 +211,22 @@ You'll note no values are stored in the localStorage of http://dependant-site.co
 
 ### Build
 
-Running `tsc` deposits built files in the `/lib` folder.
+To build the bundle, run:
+
+```bash
+npm run build
+```
+
+The output can be found in the `/lib` folder.
+
+### Deploy
+
+To deploy a new version:
+
+- Update the CHANGELOG.md with the recent changes.
+- Update the package.json with the new version number.
+- Run the following bash command:
+
+```bash
+npm run deploy
+```
