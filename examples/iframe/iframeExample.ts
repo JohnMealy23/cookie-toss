@@ -1,4 +1,4 @@
-import { createIframe, IframeConfig } from "../../lib";
+import { createIframe, IframeConfig } from "../../src";
 import { handler } from "./handler";
 import { exampleDataKey } from "../exampleConfig";
 

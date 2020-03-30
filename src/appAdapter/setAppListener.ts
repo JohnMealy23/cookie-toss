@@ -1,5 +1,5 @@
-import { getBaseDomain } from '../utils';
-import { IframeResponse, AppConfig } from '../types';
+import { getDomainAndPath } from '../common/urlUtils';
+import { IframeResponse, AppConfig } from '../common/types';
 
 /**
  * Here we create the listening functions that will receive data-type specific
@@ -21,25 +21,26 @@ export const setAppListener = <Data>(
     { dataKey, iframeUrl }: AppConfig<Data>
 ): Promise<Data | null> => new Promise((resolve, reject) => {
 
+    // // Cache the iframe's base domain for use in IDing requests from
+    // // it later on.
+    const iframeLocation = getDomainAndPath(iframeUrl);
+
     // Create a listener, which will await iframe responses
     const listener: Listener = ({ origin, data: maybeIframePayload }) => {
 
         // Attempt to parse payload:
         let response
         try {
-            response = JSON.parse(maybeIframePayload) as IframeResponse;
+            response = (JSON.parse(maybeIframePayload) || {}) as IframeResponse;
         } catch (e) {
             // Leaving this catch empty, as a log here can get bombarded with
             // errors from post requests made by ads, etc.
             return
         }
 
-        const requesterBaseDomain = getBaseDomain(origin);
-        const expectedBaseDomain = getBaseDomain(iframeUrl);
-
         if (
             // Ensure the caller is the main site's iframe
-            requesterBaseDomain === expectedBaseDomain &&
+            iframeLocation === getDomainAndPath(origin) &&
             // and that this is a response from the iframe:
             response.type === responseTypeName &&
             // and that the response is intended for this data type

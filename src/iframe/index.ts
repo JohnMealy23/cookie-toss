@@ -1,7 +1,7 @@
 import { setIframeListener } from './iframeListener';
 import { createIframeRoutes } from './createIframeRoutes';
-import { IframeConfig } from '../types';
-import { getBaseDomain } from '../utils';
+import { IframeConfig } from '../common/types';
+import { getHostname } from '../common/urlUtils';
 
 export const createIframe = ({
     dependentDomains,
@@ -12,7 +12,7 @@ export const createIframe = ({
     const routes = createIframeRoutes(dataConfigs)
 
     // Add the local domain to the whitelisted domains by default:
-    dependentDomains.push(getBaseDomain(origin))
+    dependentDomains.push(getHostname(origin))
 
     // Create the listener, which picks up requests, filters
     // out non-whitelisted domains, and receives data based on

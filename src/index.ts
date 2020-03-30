@@ -16,4 +16,4 @@ export {
     DataConfig,
     IframeConfig,
     StringifiableRequestData
-} from './types'
+} from './common/types'

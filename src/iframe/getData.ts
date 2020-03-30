@@ -1,6 +1,6 @@
-import { IframeRouteEndpoint, AppConfig } from '../types'
+import { IframeRouteEndpoint, AppConfig } from '../common/types'
 import { getWithExpiry } from './localStorageUtils'
-import { REQUEST_TYPE_RESPONSE } from '../constants'
+import { REQUEST_TYPE_RESPONSE } from '../common/constants'
 
 export const getData: IframeRouteEndpoint = ({ dataKey }: AppConfig) => {
     return {

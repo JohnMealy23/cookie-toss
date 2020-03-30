@@ -1,6 +1,6 @@
-import { IframeRouteEndpoint, DataConfig, IframeResponse } from '../types';
+import { IframeRouteEndpoint, DataConfig, IframeResponse } from '../common/types';
 import { getWithExpiry, setWithExpiry } from './localStorageUtils';
-import { REQUEST_TYPE_RESPONSE } from '../constants';
+import { REQUEST_TYPE_RESPONSE } from '../common/constants';
 
 /**
  * This factory wraps the user-defined data getter.  This wrapper

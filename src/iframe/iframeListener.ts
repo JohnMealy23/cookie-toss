@@ -1,6 +1,14 @@
-import { IframeRoutes, IframeListener, DependentDomains, AppRequest, IframeResponse, AppConfig, IframeRouteEndpoint } from '../types';
-import { getBaseDomain } from '../utils';
-import { REQUEST_TYPE_SET, REQUEST_TYPE_GET, REQUEST_TYPE_RESPONSE } from '../constants';
+import {
+    IframeRoutes,
+    IframeListener,
+    DependentDomains,
+    AppRequest,
+    IframeResponse,
+    AppConfig,
+    IframeRouteEndpoint
+} from '../common/types';
+import { getHostname } from '../common/urlUtils';
+import { REQUEST_TYPE_SET, REQUEST_TYPE_GET, REQUEST_TYPE_RESPONSE } from '../common/constants';
 
 /**
  * In this file we create the single listener for the iframe.
@@ -14,7 +22,7 @@ export const setIframeListener = (
     dependentDomains: DependentDomains
 ) => {
     const iframeListener: IframeListener = async ({ origin, data: appRequestPayload }) => {
-        const requesterBaseDomain = getBaseDomain(origin);
+        const requesterBaseDomain = getHostname(origin);
 
         // If this request came from one of our own, process it:
         if (dependentDomains.includes(requesterBaseDomain)) {
