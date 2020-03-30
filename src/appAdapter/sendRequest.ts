@@ -1,5 +1,5 @@
-import { getIframe } from "./getIframe";
-import { AppRequest, RequestTypes, AppConfig } from "../types";
+import { getIframe } from './getIframe';
+import { AppRequest, RequestTypes, AppConfig } from '../types';
 
 /**
  * Here we inject or gather the cached iframe, then post the request to it.

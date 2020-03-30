@@ -1,4 +1,4 @@
-import { StringifiableRequestData } from "types"
+import { StringifiableRequestData } from '../types'
 
 const msInADay = 86400000
 const thirtyYears = msInADay * 365 * 30

@@ -9,6 +9,7 @@
     "dev-app": "parcel ./examples/app.html --port 2222",
     "build": "parcel build ./src/index.ts --target node",
     "build-ts": "tsc",
+    "deploy": "npm run build-ts && npm publish --access public",
     "test": "jest"
   },
   "author": "John Mealy",
