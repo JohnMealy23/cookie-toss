@@ -1,5 +1,9 @@
 # Changelog
 
+## 2.0.1 - 2020.03.30
+
+Improved identification/security of requests sent between iframe and app
+
 ## 2.0.0 - 2020.03.30
 
 - Removed all references to "cookie" as this is now localStorage based.
