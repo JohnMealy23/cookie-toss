@@ -5,8 +5,9 @@ import {
     AppConfigSetterOptions,
 } from "../../src";
 import { exampleDataKey, exampleIframeUrl, MyAppData } from "../exampleConfig";
+import { insertTag } from "../common/insertTag";
 
-export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {
+export const appConfigForCustomGetter: AppConfigGetterOptions = {
 
     // The URL of the iframe living on the central domain where
     // all data will be stored:
@@ -17,8 +18,6 @@ export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {
 
     // Test payload:
     handlerPayload: {
-        reason: 'Not sure why anyone would use this',
-        but: 'just in case...',
         makesItToIframe: true,
         appId: 'app-123'
     }
@@ -40,15 +39,6 @@ export const appConfigForSimpleSetter: AppConfigSetterOptions = {
 
 }
 
-const insertTag = (value: string | { [x: string]: any }, type: string = 'p') => {
-    if (typeof value !== 'string') {
-        value = JSON.stringify(value, null, 4)
-    }
-    const p = document.createElement(type)
-    p.innerText = value
-    document.body.appendChild(p)
-}
-
 const test1 = async () => {
     insertTag('Test 1 - Get Data with Custom Getter in Iframe', 'h2')
 
@@ -58,6 +48,11 @@ const test1 = async () => {
     insertTag('Resetting the data this time, to have a clean slate for testing.')
     insertTag({ appConfigForCustomGetter }, 'pre')
     const result1 = await get(appConfigForCustomGetter)
+    try {
+        document.getElementsByTagName('iframe')[0].style.display = 'block'
+    } catch (e) {
+        console.log('Failed to make the iframe visible.')
+    }
     insertTag('Back in the app with the data retrieved from the iframe:')
     insertTag({ result1 }, 'pre')
 

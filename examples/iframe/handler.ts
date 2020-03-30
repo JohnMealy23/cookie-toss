@@ -1,10 +1,14 @@
 import { MyAppData } from "../exampleConfig";
+import { insertTag } from "../common/insertTag";
 
 export const handler = async (dataSentFromApp: MyAppData) => {
-    console.log('Inside user-defined data getter in iframe.')
-    console.log('Data sent from the app to the iframe:', dataSentFromApp)
+    insertTag('Inside user-defined handler in the iframe.', 'h3')
+    insertTag('Usually the iframe is invisible, but for the sake the the test we\'ll let it be seen.')
+    insertTag('Data sent from the app to the iframe:')
+    insertTag({ dataSentFromApp }, 'pre')
     const result = await mockRequestDataFromServer(dataSentFromApp.appId)
-    console.log('Sending data back to the app:', { result })
+    insertTag('Got the value for the request, and sending it back to the app:')
+    insertTag({ result }, 'pre')
     return result
 }
 
