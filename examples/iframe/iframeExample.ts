@@ -1,4 +1,4 @@
-import { createIframe, IframeConfig } from "../../src";
+import { createIframe, IframeConfig } from "../../lib";
 import { handler } from "./handler";
 import { exampleCookieName } from "../exampleConfig";
 

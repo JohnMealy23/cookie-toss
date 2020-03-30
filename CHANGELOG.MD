@@ -1,12 +1,16 @@
 # Changelog
 
+## 1.1.2 - 2020.03.30
+
+Build setup wasn't properly packaging for npm.  Switched to rollup.
+
 ## 1.1.1 - 2020.03.30
 
 Forgot to build.  Added command for deploy, to ensure build happens first.
 
 ## 1.1.0 - 2020.03.29
 
-Switched from cookie-based storage to localStorge
+Switched from cookie-based storage to localStorge.
 
 ## 1.0.0 - 2020.03.28
 
