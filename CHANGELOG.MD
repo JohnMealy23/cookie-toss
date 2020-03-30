@@ -20,7 +20,7 @@ Forgot to build.  Added command for deploy, to ensure build happens first.
 
 ## 1.1.0 - 2020.03.29
 
-Switched from cookie-based storage to localStorge.
+Switched from cookie-based storage to localStorage.
 
 ## 1.0.0 - 2020.03.28
 
