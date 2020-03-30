@@ -1,5 +1,10 @@
 # Changelog
 
+## 1.1.3 - 2020.03.30
+
+Removed all references to "cookie" as this is now localStorage based.
+Updated docs and beefed up error handling.
+
 ## 1.1.2 - 2020.03.30
 
 Build setup wasn't properly packaging for npm.  Switched to rollup.
