@@ -52,7 +52,7 @@ createIframe({ dependentDomains });
 // That's it!
 ```
 
-Somewhere in the app on satellite1.com or satellite2.com:
+Somewhere in the app on __satellite1.com__:
 
 ```javascript
 import { set } from "cookie-toss";
@@ -67,6 +67,8 @@ const result = await set({
   }
 });
 ```
+
+Somewhere else in the app on __satellite2.com__:
 
 ```javascript
 import { get } from "cookie-toss";
@@ -85,13 +87,17 @@ console.log(result)
 */
 ```
 
-However, one of the strengths of cookie-toss is that it allows you to make the iframe the source of truth, alleviating potential race conditions and non-DRY behavior in your satellite apps.  This is done by using handlers in the iframe to do the cookie fetching.  Read on.
+However, one of the strengths of cookie-toss is that it allows you to make the iframe the source of truth, alleviating potential race conditions and non-DRY behavior in your satellite apps.  This is done by using handlers in the iframe to do the cookie fetching.  Read on...
 
 ### Iframe Handlers
 
+By setting a handler under a `dataKey` in the iframe, your satellite apps can all call for data, and the hub iframe will handle the getting of the data.  This means no one app has to set the data before others can retrieve it.
+
+Iframe on hub.com/cookie-toss.html:
+
 ```javascript
 import { createIframe } from 'cookie-toss'
-import { myFetchFromServerFn } from 'my-data-getter'
+import { createUserUuid } from 'my-data-getter'
 
 const dependentDomains = ['satellite1.com', 'satellite2.com']
 
@@ -99,27 +105,28 @@ createIframe({
     dependentDomains,
     dataConfigs: [
         {
-            dataKey: 'snickerdoodle',
-            handler: myFetchFromServerFn,
-            expires: 3
+            dataKey: 'userUuid',
+            handler: createUserUuid,
         }
     ]
 });
 ```
 
-In the above case, the iframe will now host our data getter, `myFetchFromServerFn`.  The value returned by this async function will be stored at the `'snickerdoodle'` key in the iframe, and become available to all satellite domains.
+In the above case, the iframe will now host our data getter, `createUserUuid`.  The value returned by this sync or async function will be stored at the `'userUuid'` key in the iframe, and become available to all satellite domains.
 
-We now can add the following code to satellite1.com and satellite2.com.  The first satellite to call the iframe will trigger the iframe to call `myFetchFromServerFn` and cache the response on the hub.  In the second call, the iframe will reply immediately with the cached value.
+We now can add the following code to satellite1.com and satellite2.com.  The first satellite to call the iframe will trigger the iframe to execute `createUserUuid` and cache the response on the hub.  In the second call, the iframe will reply immediately with the cached value:
+
+Somewhere in the app on __satellite1.com__:
 
 ```javascript
 import { get } from "cookie-toss";
 
 const result = await get({
   iframeUrl: 'https://hub.com/cookie-toss.html',
-  dataKey: 'snickerdoodle',
+  dataKey: 'userUuid',
 });
 
-console.log(result) // Data returned by `myFetchFromServerFn` in iframe
+console.log(result) // 123e4567-e89b-12d3-a456-426655440000
 ```
 
 ## API
@@ -169,7 +176,7 @@ The function used by the application for getting the datum from the hub domain. 
 
 ### Unit tests
 
-[TBD]
+[TBD]  I'm the worst.
 
 ### Smoke Tests
 
