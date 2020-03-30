@@ -1,12 +1,12 @@
 import { createIframe, IframeConfig } from "../../src";
 import { handler } from "./handler";
-import { exampleDependentDomain, exampleCookieName } from "../exampleConfig";
+import { exampleCookieName } from "../exampleConfig";
 
 export const iframeConfig: IframeConfig = {
 
     // List of approved URLs, from which cookies can be requested:
     dependentDomains: [
-        exampleDependentDomain,
+        'dependant-site.com',
     ],
 
     // List of cookie getters to be executed inside the iframe,

@@ -1,2 +1,3 @@
-export const REQUEST_KEY_SUFFIX = '-request'
-export const RESPONSE_KEY_SUFFIX = '-response'
+export const REQUEST_TYPE_GET = 'get' as const
+export const REQUEST_TYPE_SET = 'set' as const
+export const REQUEST_TYPE_RESPONSE = 'response' as const

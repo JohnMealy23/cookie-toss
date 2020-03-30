@@ -1,8 +1,9 @@
-import { IframeRoutes, RequestTypes } from '../types';
+import { IframeRoutes } from '../types';
 import { iframeEndpointFactory } from './endpointFactory';
 import { CookieConfig } from '../types';
-import { getRequestKey } from '../utils';
-import { setCookie, getCookie } from './cookieGetAndSet';
+import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
+import { getData } from './getData';
+import { setData } from './setData';
 
 /**
  * In this file, add the getter and setter routes for requests
@@ -16,8 +17,8 @@ import { setCookie, getCookie } from './cookieGetAndSet';
  */
 
 const routes = {
-    [RequestTypes.REQUEST_TYPE_GET]: getCookie,
-    [RequestTypes.REQUEST_TYPE_SET]: setCookie,
+    [REQUEST_TYPE_GET]: getData,
+    [REQUEST_TYPE_SET]: setData
 }
 
 export const createIframeRoutes = (
@@ -25,10 +26,9 @@ export const createIframeRoutes = (
 ): IframeRoutes => cookieConfigs
     .reduce((routes: IframeRoutes, cookieConfig) => {
         const { cookieName } = cookieConfig
-        const endpointKey = getRequestKey(cookieName)
-        if (routes[endpointKey]) {
+        if (routes[cookieName]) {
             throw new Error(`Multiple modules are attempting to define the ${cookieName} cookie.  Please ensure the getter for this is set once per implementation.`)
         }
-        routes[endpointKey] = iframeEndpointFactory(cookieConfig)
+        routes[cookieName] = iframeEndpointFactory(cookieConfig)
         return routes
     }, routes)
