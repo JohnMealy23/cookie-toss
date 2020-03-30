@@ -31,7 +31,7 @@ Enter cookie-toss. This package allows you to store all user data on a central (
 
 ---
 
-__Note__: You can find full examples of usage in the /examples directory of the repo.
+__Note__: You can find full examples of usage in the /examples directory of the repo.  Note the "Smoke Tests" section below for how to run examples locally.
 
 ---
 
@@ -136,7 +136,7 @@ The function for producing the code that lives in the iframe on the hub domain.
 | `dataConfigs` | An array of configurations for each data value the iframe will manage. | `false` | Array | See below. |
 | `dataConfigs[n].dataKey` | The localStorage key the data will be stored under. Also used when retrieving the value. | `true` | String | `'snickerdoodle'` |
 | `dataConfigs[n].handler` | The function that retrieves the data for the localStorage value. Optionally receives an argument the app sends when requesting the datum. | `true` | Function | ``(userName) => axios(`${myEndpoint}?user=${userName}`)`` |
-| `dataConfigs[n].expires` | The number of days before the data expires. | `false` | Number | `7` |
+| `dataConfigs[n].expires` | The number of days before the data expires. Defaults to 30 years. | `false` | Number | `7` |
 
 ### `set(options)`
 
