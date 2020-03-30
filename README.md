@@ -187,12 +187,6 @@ For some hacky smoke testing, add the following entries to your etc/hosts file:
 127.0.0.1	source-of-truth.com
 ```
 
-Build the bundle:
-
-```bash
-npm run build
-```
-
 In one terminal run:
 
 ```bash

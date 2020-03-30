@@ -1,7 +1,7 @@
-import { IframeRoutes } from '../types';
+import { IframeRoutes } from '../common/types';
 import { iframeEndpointFactory } from './endpointFactory';
-import { DataConfig } from '../types';
-import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
+import { DataConfig } from '../common/types';
+import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../common/constants';
 import { getData } from './getData';
 import { setData } from './setData';
 

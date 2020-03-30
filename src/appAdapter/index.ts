@@ -5,8 +5,8 @@ import {
     AppConfigSetterOptions,
     AppConfigGetterOptions,
     AppConfig
-} from '../types';
-import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
+} from '../common/types';
+import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../common/constants';
 
 /**
  * In this file we set up the listener for the application,

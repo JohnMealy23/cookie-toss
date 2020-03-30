@@ -1,4 +1,4 @@
-import { getBaseDomain } from '../utils'
+import { getDomainAndPath } from '../common/urlUtils'
 
 type IframeCache = { [domain: string]: Promise<HTMLIFrameElement> }
 let cache: IframeCache = {}
@@ -17,7 +17,7 @@ let cache: IframeCache = {}
  */
 
 export const getIframe = async (iframeUrl: string): Promise<HTMLIFrameElement> => {
-    const domain = getBaseDomain(iframeUrl)
+    const domain = getDomainAndPath(iframeUrl)
     cache[domain] = cache[domain] || createIframe(iframeUrl)
     return cache[domain]
 }
