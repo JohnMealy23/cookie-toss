@@ -1,6 +1,6 @@
 {
   "name": "cookie-toss",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "description": "",
   "main": "lib/index.js",
   "types": "lib/index.d.js",
@@ -9,6 +9,7 @@
     "dev-app": "parcel ./examples/app.html --port 2222",
     "build": "parcel build ./src/index.ts --target node",
     "build-ts": "tsc",
+    "deploy": "npm run build-ts && npm publish --access public",
     "test": "jest"
   },
   "author": "John Mealy",

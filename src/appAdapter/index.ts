@@ -1,12 +1,12 @@
-import { setAppListener } from "./setAppListener";
-import { sendRequest } from "./sendRequest";
+import { setAppListener } from './setAppListener';
+import { sendRequest } from './sendRequest';
 import {
     RequestTypes,
     AppConfigSetterOptions,
     AppConfigGetterOptions,
     AppConfig
-} from "../types";
-import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from "../constants";
+} from '../types';
+import { REQUEST_TYPE_GET, REQUEST_TYPE_SET } from '../constants';
 
 /**
  * In this file we set up the listener for the application,

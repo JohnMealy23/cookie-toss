@@ -1,4 +1,4 @@
-import { getBaseDomain } from "../utils"
+import { getBaseDomain } from '../utils'
 
 type IframeCache = { [domain: string]: Promise<HTMLIFrameElement> }
 let cache: IframeCache = {}

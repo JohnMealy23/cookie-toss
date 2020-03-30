@@ -1,6 +1,6 @@
-import { IframeRouteEndpoint } from "../types"
-import { setWithExpiry } from "./localStorageUtils"
-import { REQUEST_TYPE_RESPONSE } from "../constants"
+import { IframeRouteEndpoint } from '../types'
+import { setWithExpiry } from './localStorageUtils'
+import { REQUEST_TYPE_RESPONSE } from '../constants'
 
 export const setData: IframeRouteEndpoint = (config) => {
     const { cookieName, data } = config

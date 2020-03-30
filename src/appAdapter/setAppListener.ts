@@ -1,5 +1,5 @@
-import { getBaseDomain } from "../utils";
-import { IframeResponse, AppConfig } from "../types";
+import { getBaseDomain } from '../utils';
+import { IframeResponse, AppConfig } from '../types';
 
 /**
  * Here we create the listening functions that will receive cookie-specific
