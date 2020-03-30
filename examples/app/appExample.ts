@@ -1,9 +1,9 @@
 import {
+    get,
+    set,
     AppConfigGetterOptions,
     AppConfigSetterOptions,
-    get,
-    set
-} from "../../src";
+} from "../../lib";
 import { exampleCookieName, exampleIframeUrl, MyAppData } from "../exampleConfig";
 
 export const appConfigForCustomGetter: AppConfigGetterOptions<MyAppData> = {

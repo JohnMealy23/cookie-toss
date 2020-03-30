@@ -4,12 +4,13 @@ module.exports = {
   ],
   "transform": {
     "^.+\\.tsx?$": "ts-jest"
-  },    
+  },
   "coveragePathIgnorePatterns": [
     "/node_modules/",
     "/test/",
     "/__tests__/",
     "/dist/",
+    "/lib/",
     "/config/",
     "/jestSetup.js"
   ],
