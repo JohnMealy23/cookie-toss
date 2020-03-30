@@ -180,10 +180,16 @@ The function used by the application for getting the datum from the hub domain. 
 
 ### Smoke Tests
 
-Add the following entries to your etc/hosts file:
+For some hacky smoke testing, add the following entries to your etc/hosts file:
 ```
 127.0.0.1	dependant-site.com
 127.0.0.1	source-of-truth.com
+```
+
+Build the bundle:
+
+```bash
+npm run build
 ```
 
 In one terminal run:
@@ -199,6 +205,8 @@ npm run dev-app
 ```
 
 Navigate to http://dependant-site.com:2222, and open the developer console to observe output.
+
+You'll note no values are stored in the localStorage of http://dependant-site.com:2222.  If you navigate to http://source-of-truth.com:1111, you'll find all example values stored there.
 
 ### Build
 
