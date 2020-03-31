@@ -35,7 +35,10 @@ export const appConfigForSimpleSetter: AppConfigSetterOptions = {
     dataKey: 'data-set-by-app',
 
     // Test payload:
-    data: [{ well: 'hello there' }]
+    data: [
+        { well: 'hello there' },
+        { testValue: 5 }
+    ]
 
 }
 
@@ -74,13 +77,13 @@ const test2 = async () => {
     insertTag('Inside of satellite app.  About to send a set request to the iframe.')
     insertTag({ appConfigForSimpleSetter }, 'pre')
     const result3 = await set(appConfigForSimpleSetter)
-    insertTag('Back in the app with the data retrieved from the iframe:')
+    insertTag('Back in the app with the data that\'s made the round-trip through the iframe:')
     insertTag({ result3 }, 'pre')
-    insertTag('Going in with a get request, now...')
 
     insertTag('Request 2', 'h3')
+    insertTag('Going back in, but with a get request this time...')
     const result4 = await get(appConfigForSimpleSetter)
-    insertTag('Behold!  The results were consistent between calls:')
+    insertTag('Back from the iframe, and behold!  The results were consistent between calls:')
     insertTag({ result3, result4 }, 'pre')
 }
 

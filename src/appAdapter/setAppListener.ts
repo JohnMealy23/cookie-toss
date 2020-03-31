@@ -29,12 +29,17 @@ export const setAppListener = <Data>(
     const listener: Listener = ({ origin, data: maybeIframePayload }) => {
 
         // Attempt to parse payload:
-        let response
+        let response: IframeResponse
+        let responseType
+        let responseDataKey
         try {
-            response = (JSON.parse(maybeIframePayload) || {}) as IframeResponse;
+            response = JSON.parse(maybeIframePayload);
+            responseType = response.type
+            responseDataKey = response.dataKey
         } catch (e) {
-            // Leaving this catch empty, as a log here can get bombarded with
-            // errors from post requests made by ads, etc.
+            // Guess it wasn't one of ours.
+            // Logging here might not be a bad idea, but also might get noisy
+            // if ads and whatnot started emitting to this iframe.
             return
         }
 
@@ -42,9 +47,9 @@ export const setAppListener = <Data>(
             // Ensure the caller is the main site's iframe
             iframeLocation === getDomainAndPath(origin) &&
             // and that this is a response from the iframe:
-            response.type === responseTypeName &&
+            responseType === responseTypeName &&
             // and that the response is intended for this data type
-            response.dataKey === dataKey
+            responseDataKey === dataKey
         ) {
             // Clean up:
             window.removeEventListener('message', listener);
