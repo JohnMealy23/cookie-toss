@@ -6,7 +6,6 @@ import {
     IframeResponse,
     AppConfig,
     IframeRouteEndpoint,
-    IframeListenerSpecs
 } from '../common/types';
 import { getHostname } from '../common/urlUtils';
 import { REQUEST_TYPE_SET, REQUEST_TYPE_GET, REQUEST_TYPE_RESPONSE } from '../common/constants';

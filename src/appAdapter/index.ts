@@ -1,4 +1,4 @@
-import { setAppListener } from './setAppListener';
+import { appListenerFactory } from './appListenerFactory';
 import { sendRequest } from './sendRequest';
 import {
     RequestTypes,
@@ -36,7 +36,7 @@ const makeRequest = async <Data>(
 ): Promise<Data | null> => {
     // Create and attach listener, to await iframe responses, and
     // relay them back to the host app.
-    const resultPromise = setAppListener<Data>(config)
+    const resultPromise = appListenerFactory<Data>(config)
 
     // Create the request for data, and send it into the iframe:
     sendRequest(type, config)

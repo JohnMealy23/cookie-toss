@@ -7,6 +7,15 @@ export type PrimitiveObject = { [k: string]: Primitive | PrimitiveObject | Primi
 export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive
 
 /**
+ * The listener in the satellite app, awaiting the iframe's response:
+ */
+export interface ListenerSpecs {
+    origin: string;
+    data: string;
+};
+export type AppListener = (specs: ListenerSpecs) => void;
+
+/**
  * The object the iframe will receive from the app's post request:
  */
 export interface IframeListenerSpecs {
@@ -18,17 +27,17 @@ export interface IframeListenerSpecs {
 /**
  * The possible responses from the iframe:
  */
-export interface IframeSuccessResponse {
+export interface IframeSuccessResponse<AppData> {
     type: RequestTypeResponse;
     dataKey: string;
-    data: StringifiableRequestData;
+    data: AppData;
 }
 export interface IframeErrorResponse {
     type: RequestTypeResponse;
     dataKey: string;
     error: string;
 }
-export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
+export type IframeResponse<AppData = StringifiableRequestData> = IframeSuccessResponse<AppData> | IframeErrorResponse
 
 /**
  * The signature of a single endpoint within the iframe.  Each endpoint
