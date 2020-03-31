@@ -1,5 +1,12 @@
 # Changelog
 
+## 2.0.3 - 2020.03.31
+
+- Added support for infinite expiry on data.
+- Improved error handling in appListener.
+- Fixed bug in iframeListener, which would allow erroneous calls from the app to be processed.
+- Improved smoke tests.
+
 ## 2.0.2 - 2020.03.30
 
 Improved smoke test output.
