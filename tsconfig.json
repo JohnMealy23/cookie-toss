@@ -1,6 +1,7 @@
 {
   "compilerOptions": {
     "resolveJsonModule": true,
+    "alwaysStrict": true,
     "outDir": "lib",
     "allowSyntheticDefaultImports": true,
     "target": "es5",

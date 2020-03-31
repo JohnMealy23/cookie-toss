@@ -7,6 +7,15 @@ export type PrimitiveObject = { [k: string]: Primitive | PrimitiveObject | Primi
 export type StringifiableRequestData = PrimitiveObject | PrimitiveArray | Primitive
 
 /**
+ * The listener in the satellite app, awaiting the iframe's response:
+ */
+export interface ListenerSpecs {
+    origin: string;
+    data: string;
+};
+export type AppListener = (specs: ListenerSpecs) => void;
+
+/**
  * The object the iframe will receive from the app's post request:
  */
 export interface IframeListenerSpecs {
@@ -18,17 +27,17 @@ export interface IframeListenerSpecs {
 /**
  * The possible responses from the iframe:
  */
-export interface IframeSuccessResponse {
+export interface IframeSuccessResponse<AppData> {
     type: RequestTypeResponse;
     dataKey: string;
-    data: StringifiableRequestData;
+    data: AppData;
 }
 export interface IframeErrorResponse {
     type: RequestTypeResponse;
     dataKey: string;
     error: string;
 }
-export type IframeResponse = IframeSuccessResponse | IframeErrorResponse
+export type IframeResponse<AppData = StringifiableRequestData> = IframeSuccessResponse<AppData> | IframeErrorResponse
 
 /**
  * The signature of a single endpoint within the iframe.  Each endpoint
@@ -54,7 +63,7 @@ export type DependentDomains = string[]
 export type DataConfig = {
 
     /**
-     * The name on the hub domain under which the data will be stored:
+     * The localStorage key on the hub domain under which the data will be stored:
      */
     dataKey: string;
 
@@ -62,7 +71,7 @@ export type DataConfig = {
      * A function that resides in the iframe, and retrieves the data that
      * will be stored in the data on the hub domain:
      */
-    handler: (requestData?: StringifiableRequestData) => Promise<string>;
+    handler: (requestData?: StringifiableRequestData) => Promise<StringifiableRequestData>;
 
     /**
      * Optional data expiration settings:
@@ -75,17 +84,21 @@ export type AppConfigBase = {
 
     /**
      * Domain on which the iframe will be hosted.  This is where all
-     * data will be stored.
+     * data will be stored:
      */
     iframeUrl: string;
 
     /**
-     * The name on the hub domain under which the data will be stored:
+     * The localStorage key on the hub domain under which the data will be stored:
      */
     dataKey: string;
 
 }
 
+/**
+ * Configuration for the app's `get` requests to the iframe, where the
+ * iframe holds a `handler` for the `dataKey` of the request:
+ */
 export type AppConfigGetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
@@ -105,6 +118,9 @@ export type AppConfigGetterOptions<AppData = StringifiableRequestData> = AppConf
 
 }
 
+/**
+ * Configuration for the app's `set` requests to the iframe
+ */
 export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConfigBase & {
 
     /**
@@ -120,22 +136,30 @@ export type AppConfigSetterOptions<AppData = StringifiableRequestData> = AppConf
 }
 
 /**
+ * A value to keep track of infinite cookie life, when being stored in localStorage:
+ */
+export type InfinityToken = 'INFINITY_TOKEN'
+
+/**
  * The different request types the app can make to the iframe:
  */
-
 export type RequestTypes = RequestTypeGet | RequestTypeSet | RequestTypeResponse
-
 export type RequestTypeGet = 'get'
 export type RequestTypeSet = 'set'
 export type RequestTypeResponse = 'response'
 
+/**
+ * Typing for requests headed out of the app, and into the iframe:
+ */
 export type AppConfig<AppData = StringifiableRequestData> = AppConfigGetterOptions<AppData> | AppConfigSetterOptions<AppData>
-
 export type AppRequest<AppData = StringifiableRequestData> = {
     type: RequestTypes;
     config: AppConfig<AppData>;
 }
 
+/**
+ * Typing for the iframe's configuration:
+ */
 export type IframeConfig = {
 
     /**

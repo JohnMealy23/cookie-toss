@@ -1,5 +1,5 @@
 import { getDomainAndPath } from '../common/urlUtils';
-import { IframeResponse, AppConfig } from '../common/types';
+import { IframeResponse, AppConfig, AppListener } from '../common/types';
 
 /**
  * Here we create the listening functions that will receive data-type specific
@@ -8,33 +8,31 @@ import { IframeResponse, AppConfig } from '../common/types';
  * application.
  */
 
-interface ListenerSpecs {
-    origin: string;
-    data: string;
-};
-
-type Listener = (specs: ListenerSpecs) => void;
-
 const responseTypeName = 'response'
 
-export const setAppListener = <Data>(
-    { dataKey, iframeUrl }: AppConfig<Data>
-): Promise<Data | null> => new Promise((resolve, reject) => {
+export const appListenerFactory = <AppData>(
+    { dataKey, iframeUrl }: AppConfig<AppData>
+): Promise<AppData | null> => new Promise((resolve, reject) => {
 
     // // Cache the iframe's base domain for use in IDing requests from
     // // it later on.
     const iframeLocation = getDomainAndPath(iframeUrl);
 
     // Create a listener, which will await iframe responses
-    const listener: Listener = ({ origin, data: maybeIframePayload }) => {
+    const listener: AppListener = ({ origin, data: maybeIframePayload }) => {
 
         // Attempt to parse payload:
-        let response
+        let response: IframeResponse<AppData>
+        let responseType
+        let responseDataKey
         try {
-            response = (JSON.parse(maybeIframePayload) || {}) as IframeResponse;
+            response = JSON.parse(maybeIframePayload);
+            responseType = response.type
+            responseDataKey = response.dataKey
         } catch (e) {
-            // Leaving this catch empty, as a log here can get bombarded with
-            // errors from post requests made by ads, etc.
+            // Guess it wasn't one of ours.
+            // Logging here might not be a bad idea, but also might get noisy
+            // if ads and whatnot started emitting to this iframe.
             return
         }
 
@@ -42,27 +40,21 @@ export const setAppListener = <Data>(
             // Ensure the caller is the main site's iframe
             iframeLocation === getDomainAndPath(origin) &&
             // and that this is a response from the iframe:
-            response.type === responseTypeName &&
+            responseType === responseTypeName &&
             // and that the response is intended for this data type
-            response.dataKey === dataKey
+            responseDataKey === dataKey
         ) {
             // Clean up:
             window.removeEventListener('message', listener);
 
-            if ('error' in response) {
+            if ('data' in response) {
+                // Success! Relay the data to the caller:
+                resolve(response.data);
+            } else if ('error' in response) {
                 // Uh-oh! Something went wrong! Relay error to caller:
                 reject(new Error(`Error received from ${dataKey} data request! ${response.error}`))
             } else {
-                // Success! Relay the data to the caller:
-                let result
-                try {
-                    result = typeof response.data === 'string' ?
-                        JSON.parse(response.data) :
-                        response.data
-                } catch (e) {
-                    result = response.data
-                }
-                resolve(result as Data);
+                reject(new Error(`No data or errors received in request for ${dataKey}.  Please submit a ticket to the project maintainers including the custom handler for ${dataKey}, should one exist. This should not be possible.`))
             }
         }
     };
