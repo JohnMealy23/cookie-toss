@@ -20,7 +20,6 @@ export const appListenerFactory = <AppData>(
 
     // Create a listener, which will await iframe responses
     const listener: AppListener = ({ origin, data: maybeIframePayload }) => {
-
         // Attempt to parse payload:
         let response: IframeResponse<AppData>
         let responseType

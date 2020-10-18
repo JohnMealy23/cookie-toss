@@ -22,7 +22,6 @@ export const setIframeListener = (
     dependentDomains: DependentDomains
 ) => {
     const iframeListener: IframeListener = async ({ origin, data: appRequestPayload }) => {
-
         const requesterBaseDomain = getHostname(origin);
 
         // This is the filter, to ensure only requests from white-listed domains

@@ -229,7 +229,7 @@ In a second terminal run:
 npm run dev-app
 ```
 
-Navigate to <http://dependant-site.com:2222>, and open the developer console to observe output.
+Navigate to <http://dependant-site.com:2222>, and observe the output on the page.
 
 You'll note no values are stored in the localStorage of <http://dependant-site.com:2222>.  If you navigate to <http://source-of-truth.com:1111>, you'll find all example values stored there.
 
