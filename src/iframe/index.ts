@@ -16,7 +16,7 @@ export const createIframe = ({
     const dependentDomainSpecs: DependentDomainSpecs = [origin, ...dependentDomains].map(domain => getHostnameAndPort(domain))
 
     // Create the listener, which picks up requests, filters
-    // out non-accesslisted domains, and receives data based on
+    // out non-access-listed domains, and receives data based on
     // the dataKey of the response:
     setIframeListener({ routes, dependentDomainSpecs });
 }
