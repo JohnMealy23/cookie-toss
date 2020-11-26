@@ -33,7 +33,7 @@ Enter cookie-toss. This package allows you to store all user data on a central (
 
 cookie-toss provides both code for the iframe hosted on the hub domain, as well as the data getters and setters for the satellite domains.
 
-The minimum setup just involves deploying the iframe code with a list of white-listed satellite domains to your hub domain, and using the `get` and `set` functions in apps on the satellite domains.
+The minimum setup just involves deploying the iframe code with a list of access-listed satellite domains to your hub domain, and using the `get` and `set` functions in apps on the satellite domains.
 
 <div style="margin: 5px 10px; border: solid 1px #000fbe24; background: #0366d60f; padding: 10px;">
   <b>

@@ -6,8 +6,9 @@ import {
     IframeResponse,
     AppConfig,
     IframeRouteEndpoint,
+    DependentDomainSpecs,
 } from '../common/types';
-import { getHostname } from '../common/urlUtils';
+import { getHostnameAndPort } from '../common/urlUtils';
 import { REQUEST_TYPE_SET, REQUEST_TYPE_GET, REQUEST_TYPE_RESPONSE } from '../common/constants';
 
 /**
@@ -16,18 +17,16 @@ import { REQUEST_TYPE_SET, REQUEST_TYPE_GET, REQUEST_TYPE_RESPONSE } from '../co
  * it, ensures the sender is on the list of dependent sites,
  * then routes the request to the proper data getter.
  */
-
-export const setIframeListener = (
+interface SetIframeListenerProps {
     routes: IframeRoutes,
-    dependentDomains: DependentDomains
-) => {
+    dependentDomainSpecs: DependentDomainSpecs
+}
+export const setIframeListener = ({ routes, dependentDomainSpecs }: SetIframeListenerProps) => {
     const iframeListener: IframeListener = async ({ origin, data: appRequestPayload }) => {
-        const requesterBaseDomain = getHostname(origin);
-
-        // This is the filter, to ensure only requests from white-listed domains
+        // This is the filter, to ensure only requests from access-listed domains
         // have access to the hub domain's data. If this request came from one of
         // the domains on the user-defined dependent list, allow it access.
-        if (dependentDomains.includes(requesterBaseDomain)) {
+        if (isApprovedHost(dependentDomainSpecs, origin)) {
 
             let type
             let config
@@ -64,7 +63,6 @@ export const setIframeListener = (
 
     // Add the event listener to start tracking the calls:
     window.addEventListener('message', iframeListener, false);
-
 }
 
 // Determine the handler the request is destined for:
@@ -123,3 +121,23 @@ const composeErrorResponse = (dataKey: string, errorMessage: string) => ({
     dataKey: dataKey,
     error: errorMessage
 })
+
+/**
+ * Confirm the request's origin is on the access list:
+ * @param dependentDomainSpecs List of host specs
+ * @param origin Address of incoming request
+ */
+const isApprovedHost = (dependentDomainSpecs: DependentDomainSpecs, origin: string): boolean => {
+    const {
+        hostname: requestHost,
+        port: requestPort
+    } = getHostnameAndPort(origin);
+
+    // Check the origin against each access-listed domain to see if there's a match:
+    return dependentDomainSpecs.some(({ hostname, port }) => (
+        // Ensure host names match:
+        requestHost === hostname &&
+        // If a dependent host was specified, ensure the request's port matches it:
+        (!port || requestPort === port)
+    ))
+}
