@@ -1,6 +1,6 @@
 {
   "name": "cookie-toss",
-  "version": "2.0.4",
+  "version": "2.1.0",
   "description": "A package that makes sharing local data across domains a thing of ease.",
   "main": "lib/index.js",
   "types": "lib/index.d.js",

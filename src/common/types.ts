@@ -53,9 +53,22 @@ export interface IframeRoutes {
 export type IframeListener = (specs: IframeListenerSpecs) => Promise<void>;
 
 /**
+ * A package of data to ID accepted hosts:
+ */
+export type HostSpecs = {
+    hostname: string;
+    port: string;
+}
+
+/**
  * An array of domains where satellite sites reside:
  */
 export type DependentDomains = string[]
+
+/**
+ * An array of domain specs where satellite sites reside:
+ */
+export type DependentDomainSpecs = HostSpecs[]
 
 /**
  * The object the configures a single data endpoint within the iframe:
